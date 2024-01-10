@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/icon.svg">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Text Fragment Options</title>
+    <style>
+        .section {
+            max-width: 600px;
+            padding: 1rem;
+        }
+
+        fieldset {
+            margin-bottom: 1rem;
+        }
+
+        legend {
+            padding: 0 0.5rem;
+        }
+
+        label {
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        input[type=number] {
+            width: 60px;
+        }
+
+        .btn-group {
+            margin: 1rem 0;
+        }
+
+        .message {
+            margin: 0 0.5rem;
+            opacity: 1;
+        }
+
+        .message.timeout {
+            opacity: 0.5;
+            transition-duration: 2s;
+        }
+    </style>
+    <script src="/lib/util.js"></script>
+</head>
+
+<body>
+    <form class="section options">
+        <fieldset>
+            <legend>Scroll to text fragment</legend>
+            <label>
+                <input type="checkbox" data-setting="remove_fragment_directive" />
+                Auto remove fragment directive
+            </label>
+            <label>
+                Highlight method:
+                <select data-setting="highlight_type">
+                    <option value="auto">Auto</option>
+                    <option value="find">Find API</option>
+                    <option value="selection">Selection API</option>
+                </select>
+            </label>
+        </fieldset>
+        <fieldset>
+            <legend>Create link for selected text</legend>
+            <label>
+                <input type="checkbox" data-setting="keep_url_hash" />
+                Keep fragment identifier in URL
+            </label>
+            <label>
+                <input type="checkbox" data-setting="extend_incomplete_word" />
+                Auto expand incomplete words
+            </label>
+            <label>
+                Character limit for generating exact matching text fragment:
+                <input type="number" min="5" step="1" required data-setting="exact_match_limit" />
+            </label>
+        </fieldset>
+        <div class="btn-group">
+            <button type="button" class="save">Save</button>
+            <!-- <button type="button" class="reset right">Reset to default</button> -->
+            <span class="message"></span>
+        </div>
+    </form>
+    <script src="./options.js"></script>
+</body>
+
+</html>

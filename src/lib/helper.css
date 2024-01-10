@@ -1,0 +1,5 @@
+.ext-text-fragment--selectable,
+.ext-text-fragment--selectable * {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+}

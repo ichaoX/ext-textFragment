@@ -1,0 +1,38 @@
+{
+    "description": "Auto scroll to text fragment and allow you to create link for selected text.",
+    "manifest_version": 2,
+    "name": "Text Fragment",
+    "version": "0.6",
+    "icons": {
+        "32": "/icon.svg",
+        "128": "/icon.svg"
+    },
+    "permissions": [
+        "clipboardWrite",
+        "find",
+        "menus",
+        "storage",
+        "webNavigation",
+        "<all_urls>"
+    ],
+    "browser_action": {
+        "default_title": "Copy link to selected text / Restore highlight",
+        "default_icon": "/icon.svg"
+    },
+    "background": {
+        "scripts": [
+            "/lib/util.js",
+            "/background.js"
+        ]
+    },
+    "options_ui": {
+        "open_in_tab": false,
+        "browser_style": true,
+        "page": "/view/options.html"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "text-fragment@example.com"
+        }
+    }
+}
