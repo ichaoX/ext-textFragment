@@ -479,21 +479,21 @@ if (browser.menus) {
 
     browser.menus.create({
         id: MENU_IDS.COPY_LINK,
-        title: "Copy link to selected text",
+        title: "Copy Link to Selected Text",
         contexts: ["selection"],
     });
 
     try {
         browser.menus.create({
             id: MENU_IDS.REMOVE_HIGHLIGHT,
-            title: "Remove highlight",
+            title: "Remove Highlight",
             contexts: ["page"],
             visible: visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT],
         });
 
         browser.menus.create({
             id: MENU_IDS.RESTORE_HIGHLIGHT,
-            title: "Restore highlight",
+            title: "Restore Highlight",
             contexts: ["page"],
             visible: visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT],
         });
