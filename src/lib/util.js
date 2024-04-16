@@ -47,6 +47,7 @@ const util = {
     _storagePrefix: '',
     _defaultConfig: {
         debug: false,
+        auto_disable: true,
         highlight_type: 'auto',
         remove_fragment_directive: false,
         keep_url_hash: true,

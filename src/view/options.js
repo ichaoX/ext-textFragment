@@ -68,4 +68,16 @@
 
     setFormData(await util.getSettings(Object.keys(getFormData())));
     $save.disabled = true;
+
+    try {
+        if ((!!self.document.fragmentDirective) != (!!(await browser.runtime.getBackgroundPage()).document.fragmentDirective)) {
+            $message.textContent = "Reloading...";
+            setTimeout(() => {
+                browser.runtime.reload();
+            }, 1000)
+        }
+    } catch (e) {
+        console.warn(e);
+    }
+
 })();

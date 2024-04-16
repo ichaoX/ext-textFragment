@@ -1,6 +1,8 @@
-console.log('background start');
+// console.log('background start');
 
 let settings = {};
+
+let isNativeSupported = !!document.fragmentDirective;
 
 let boundedPattern = `[\\s\\p{P}\\p{S}]`;
 
@@ -360,6 +362,8 @@ let copyText = async (text, options = {}) => {
 let mutex = {};
 
 let listener = async (details) => {
+    // XXX
+    if (settings.auto_disable && isNativeSupported) return;
     let mKey;
     try {
         let match = details.url.match(/#.*?:~:(.*)$/);
