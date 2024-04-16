@@ -4,6 +4,10 @@
     let $save = $form.querySelector(".save");
     let $message = document.querySelector("form .message");
 
+    if (document.fragmentDirective) {
+        $form.setAttribute("data-native-supported", "1");
+    }
+
     $form.addEventListener("change", (event) => {
         event.preventDefault();
         $save.disabled = false;

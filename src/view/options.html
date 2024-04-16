@@ -56,14 +56,27 @@
             opacity: 0.5;
             transition-duration: 2s;
         }
+
+        [data-native-supported="0"] .native-supported-only {
+            display: none;
+        }
+
+        [data-native-supported="1"] .options-find {
+            opacity: 0.7;
+        }
     </style>
     <script src="/lib/util.js"></script>
 </head>
 
 <body>
-    <form class="section options">
-        <fieldset>
-            <legend>Scroll to text fragment</legend>
+    <form class="section options" data-native-supported="0">
+        <fieldset class="options-find">
+            <legend>
+                Scroll to text fragment
+                <span class="native-supported-only"
+                    title="This option may no longer be effective, as this browser natively supports this feature.">
+                    ( natively supported )</span>
+            </legend>
             <label>
                 <input type="checkbox" data-setting="remove_fragment_directive" />
                 Auto remove fragment directive
