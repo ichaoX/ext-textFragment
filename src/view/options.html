@@ -6,7 +6,21 @@
     <link rel="shortcut icon" href="/icon.svg">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Text Fragment Options</title>
+    <meta name="color-scheme" content="dark light">
     <style>
+        @media (prefers-color-scheme: dark) {
+
+            html,
+            body {
+                background-color: #23222b;
+                color: #fbfbfe;
+            }
+        }
+
+        fieldset {
+            border: 1px gray solid;
+        }
+
         .section {
             max-width: 600px;
             padding: 1rem;
