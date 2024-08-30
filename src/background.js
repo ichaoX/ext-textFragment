@@ -374,7 +374,7 @@ let listener = async (details) => {
         mKey = `${tabId}_${frameId}`;
         if (mutex[mKey]) {
             mKey = null;
-            throw 'cancel';
+            return;
         }
         mutex[mKey] = true;
         if (settings.remove_fragment_directive) {
@@ -395,6 +395,8 @@ let listener = async (details) => {
 };
 
 util.addListener(browser.webNavigation.onDOMContentLoaded, listener);
+// fix: https://bugzilla.mozilla.org/show_bug.cgi?id=1914978
+util.addListener(browser.webNavigation.onCompleted, listener);
 util.addListener(browser.webNavigation.onReferenceFragmentUpdated, listener);
 util.addListener(browser.webNavigation.onHistoryStateUpdated, listener);
 
