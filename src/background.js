@@ -69,17 +69,15 @@ let parseTextDirectives = (rawDirectives = []) => {
 
 let buildTextDirective = async (context, innerText = null) => {
     let fullText = context.text.trim().replace(/\r?\n\r?/g, "\n");
-    if (!context.prefix) context.prefix = context.prefix_long || '';
-    if (!context.suffix) context.suffix = context.suffix_long || '';
-    if (!context.prefix_long) context.prefix_long = context.prefix;
-    if (!context.suffix_long) context.suffix_long = context.suffix;
+    if (!context.prefix) context.prefix = '';
+    if (!context.suffix) context.suffix = '';
     let textDirective, rangeMatch;
     // XXX Intl.Segmenter
     let isWordSeparatedBySpace = /^[\x00-\x7F]*$/.test(fullText);
     if (!isWordSeparatedBySpace) {
         let detectingLanguages = await browser.i18n.detectLanguage(fullText);
-        if (!(detectingLanguages.isReliable && detectingLanguages.languages[0]) && (context.prefix_long || context.suffix_long)) {
-            detectingLanguages = await browser.i18n.detectLanguage(`${context.prefix_long}${context.text}${context.suffix_long}`);
+        if (!(detectingLanguages.isReliable && detectingLanguages.languages[0]) && (context.prefix || context.suffix)) {
+            detectingLanguages = await browser.i18n.detectLanguage(`${context.prefix}${context.text}${context.suffix}`);
         }
         util.log(detectingLanguages);
         if (detectingLanguages.isReliable && detectingLanguages.languages[0]) {
@@ -99,7 +97,7 @@ let buildTextDirective = async (context, innerText = null) => {
         textDirective = encodeTextDirectiveString(fullText);
         pattern = regExpQuote(fullText);
     }
-    if (context.prefix_long || context.suffix_long) {
+    if (context.prefix || context.suffix) {
         let wordCount = isWordSeparatedBySpace ? fullText.split(/\s+/).length : fullText.length;
         let useContext = wordCount <= 3;
         if (!useContext && innerText && pattern) {
@@ -109,8 +107,8 @@ let buildTextDirective = async (context, innerText = null) => {
             if (match && (match.length > 1 || match[0].replace(/\s+/g, ' ').toLowerCase() != fullText.replace(/\s+/g, ' ').toLowerCase())) useContext = true;
         }
         if (useContext) {
-            let prefix = (isWordSeparatedBySpace ? context.prefix_long : context.prefix).trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r]/, '').trim();
-            let suffix = (isWordSeparatedBySpace ? context.suffix_long : context.suffix).trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n][^]*$/, '').trim();
+            let prefix = context.prefix.trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r]/, '').trim();
+            let suffix = context.suffix.trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n][^]*$/, '').trim();
             if (prefix.length > 10) prefix = prefix.replace(isWordSeparatedBySpace ? /(?:^[^]*?\s)(\S+(\s+\S+){2}$)/ : new RegExp(`(?:^[^]*${boundedPattern})(\\S[^]*?$)`, 'u'), '$1');
             if (suffix.length > 10) suffix = suffix.replace(isWordSeparatedBySpace ? /(^\S+(\s+\S+){2})(?:\s[^]*?)$/ : new RegExp(`(^[^]*?\\S)(?:${boundedPattern}[^]*)$`, 'u'), '$1');
             if (suffix) textDirective += `,-${encodeTextDirectiveString(suffix)}`;
