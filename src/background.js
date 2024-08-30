@@ -159,13 +159,14 @@ let encodeTextDirectiveString = (text) => {
     return result;
 };
 
-let findText = async (textDirectives, tabId, frameId = 0, retry = 0) => {
+let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll = true) => {
     let textDirectiveDetails = parseTextDirectives(textDirectives);
     if (!textDirectiveDetails.length) return false;
     util.log(textDirectiveDetails);
     const isAutoMode = settings.highlight_type === 'auto';
     let useSelection = settings.highlight_type === 'selection' || !browser.find;
     let findRange = async (pattern, scroll = false) => {
+        if (!autoScroll) scroll = false;
         return await loadHelper(tabId, frameId,
             `_helper.findRange(${JSON.stringify(pattern)},${scroll})`
         );
@@ -248,7 +249,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0) => {
                 await browser.find.highlightResults({
                     tabId,
                     rangeIndex,
-                    noScroll: false,
+                    noScroll: !autoScroll,
                 });
                 // highlight all
                 if (highlightAll && result.count > 1 && rangeIndex == 0) {
@@ -282,7 +283,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0) => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         retry--;
         util.log('retry', retry);
-        return await findText(textDirectives, tabId, frameId, retry);
+        return await findText(textDirectives, tabId, frameId, retry, autoScroll);
     }
     return false;
 };
@@ -299,6 +300,20 @@ let getInnerText = async (tabId, frameId) => {
         console.warn(e);
     }
     return innerText;
+};
+
+let getState = async (tabId, frameId) => {
+    let state = false;
+    try {
+        state = (await browser.tabs.executeScript(tabId, {
+            frameId,
+            matchAboutBlank: true,
+            code: `typeof _helper !== 'undefined' ? _helper.state : {}`,
+        }))[0];
+    } catch (e) {
+        util.log(e);
+    }
+    return state || {};
 };
 
 let loadHelper = async (tabId, frameId, code = null) => {
@@ -361,7 +376,7 @@ let copyText = async (text, options = {}) => {
 
 let mutex = {};
 
-let listener = async (details) => {
+let listener = async (details, isLoad = false) => {
     // XXX
     if (settings.auto_disable && isNativeSupported) return;
     let mKey;
@@ -386,7 +401,12 @@ let listener = async (details) => {
             return;
         }
         util.log(details, textDirectives);
-        await findText(textDirectives, tabId, frameId, 5);
+        let autoScroll = true;
+        if (!isLoad) {
+            let state = await getState(tabId, frameId);
+            autoScroll = JSON.stringify(state.textDirectives || []) != JSON.stringify(textDirectives);
+        }
+        await findText(textDirectives, tabId, frameId, 5, autoScroll);
     } catch (e) {
         console.warn(e);
     } finally {
@@ -394,11 +414,14 @@ let listener = async (details) => {
     }
 };
 
-util.addListener(browser.webNavigation.onDOMContentLoaded, listener);
+let onLoaded = (details) => listener(details, true);
+let onUpdated = (details) => listener(details, false);
+
+util.addListener(browser.webNavigation.onDOMContentLoaded, onLoaded);
 // fix: https://bugzilla.mozilla.org/show_bug.cgi?id=1914978
-util.addListener(browser.webNavigation.onCompleted, listener);
-util.addListener(browser.webNavigation.onReferenceFragmentUpdated, listener);
-util.addListener(browser.webNavigation.onHistoryStateUpdated, listener);
+util.addListener(browser.webNavigation.onCompleted, onLoaded);
+util.addListener(browser.webNavigation.onReferenceFragmentUpdated, onUpdated);
+util.addListener(browser.webNavigation.onHistoryStateUpdated, onUpdated);
 
 let action = {
     async copyLink(tabId, frameId, url, ranges = []) {
@@ -445,11 +468,8 @@ let action = {
     },
     async restoreHighlight(tabId, frameId) {
         try {
-            let textDirectives = (await browser.tabs.executeScript(tabId, {
-                frameId,
-                matchAboutBlank: true,
-                code: `typeof _helper !== 'undefined' ? _helper.state.textDirectives : null`,
-            }))[0];
+            let state = await getState(tabId, frameId);
+            let textDirectives = state.textDirectives;
             if (textDirectives) await findText(textDirectives, tabId, frameId);
         } catch (e) {
             console.warn(e);
@@ -532,16 +552,7 @@ if (browser.menus) {
         let frameId = info.frameId || 0;
         let needRefresh = false;
         let visible = false;
-        let state = {};
-        try {
-            state = (await browser.tabs.executeScript(tabId, {
-                frameId,
-                matchAboutBlank: true,
-                code: `typeof _helper !== 'undefined' ? _helper.state : {}`,
-            }))[0];
-        } catch (e) {
-            util.log(e);
-        }
+        let state = await getState(tabId, frameId);
         visible = !!state.highlighted;
         if (visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] != visible) {
             visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] = visible;
