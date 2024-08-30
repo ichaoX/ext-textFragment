@@ -67,39 +67,115 @@ let parseTextDirectives = (rawDirectives = []) => {
     return result;
 };
 
+let wordSegmenter = {
+    map: new Map(),
+    hasIntlSegmenter() {
+        return self.Intl && self.Intl.Segmenter;
+    },
+    async getLangOpts(context) {
+        let options = {
+            isWordSeparatedBySpace: /^[\x00-\x7F]*$/.test(context.text),
+            language: null,
+        };
+        if (!options.isWordSeparatedBySpace) {
+            let detectingLanguages = await browser.i18n.detectLanguage(context.text);
+            if (!(detectingLanguages.isReliable && detectingLanguages.languages[0]) && (context.prefix || context.suffix)) {
+                detectingLanguages = await browser.i18n.detectLanguage(`${context.prefix}${context.text}${context.suffix}`);
+            }
+            util.log(detectingLanguages);
+            if (detectingLanguages.isReliable && detectingLanguages.languages[0]) {
+                options.language = detectingLanguages.languages[0].language.replace(/[\-_].*$/, '');
+                options.isWordSeparatedBySpace = 'en|fr|de|it|es|pt|sv|no|da|nl|hu|cs|sk|hr|sr|sl|pl|bg|ro'.split('|').includes(options.language);
+            }
+        }
+        return options;
+    },
+    get(locales) {
+        let s = this.map.get(locales);
+        if (!s && this.hasIntlSegmenter()) {
+            s = new Intl.Segmenter(locales, { granularity: "word" });
+            this.map.set(locales, s);
+        }
+        return s;
+    },
+    isWordLike(i) {
+        if (i.isWordLike) return true;
+        // fix: https://bugzilla.mozilla.org/show_bug.cgi?id=1891736
+        return !(new RegExp(`^${boundedPattern}+$`, 'u')).test(i.segment);
+    },
+    async create(context) {
+        let options = await this.getLangOpts(context);
+        let o = Object.create(this);
+        o.options = options;
+        return o;
+    },
+    count(fullText, langOpts = null) {
+        if (!fullText) return 0;
+        langOpts = langOpts || this.options || {};
+        let wordCount = langOpts.isWordSeparatedBySpace ? fullText.split(/\s+/).length : fullText.length;
+        if (langOpts.language && this.hasIntlSegmenter()) {
+            try {
+                let segments = this.get(langOpts.language).segment(fullText);
+                wordCount = [...segments].filter(i => this.isWordLike(i)).length;
+            } catch (e) {
+                util.log(e);
+            }
+        }
+        return wordCount;
+    },
+    short(fullText, reverse = false, n = 3, langOpts = null) {
+        if (!fullText) return '';
+        langOpts = langOpts || this.options || {};
+        let text = fullText.replace(new RegExp(
+            reverse
+                ? (langOpts.isWordSeparatedBySpace ? `(?:^[^]*?\\s)(\\S+(\\s+\\S+){${n - 1}}$)` : `(?:^[^]*${boundedPattern})(\\S[^]*?$)`)
+                : (langOpts.isWordSeparatedBySpace ? `(^\\S+(\\s+\\S+){${n - 1}})(?:\\s[^]*?)$` : `(^[^]*?\\S)(?:${boundedPattern}[^]*)$`)
+            , 'u'), '$1'
+        );
+        if (langOpts.language && this.hasIntlSegmenter()) {
+            try {
+                let segments = this.get(langOpts.language).segment(fullText);
+                let s = [...segments];
+                if (reverse) s = s.reverse();
+                text = '';
+                for (let index = 0, wordCount = 0; index < s.length && wordCount < n; index++) {
+                    let i = s[index];
+                    if (reverse) {
+                        text = i.segment + text;
+                    } else {
+                        text += i.segment;
+                    }
+                    if (this.isWordLike(i)) wordCount++;
+                }
+            } catch (e) {
+                util.log(e);
+            }
+        }
+        return text.trim();
+    },
+};
+
 let buildTextDirective = async (context, innerText = null) => {
     let fullText = context.text.trim().replace(/\r?\n\r?/g, "\n");
     if (!context.prefix) context.prefix = '';
     if (!context.suffix) context.suffix = '';
-    let textDirective, rangeMatch;
-    // XXX Intl.Segmenter
-    let isWordSeparatedBySpace = /^[\x00-\x7F]*$/.test(fullText);
-    if (!isWordSeparatedBySpace) {
-        let detectingLanguages = await browser.i18n.detectLanguage(fullText);
-        if (!(detectingLanguages.isReliable && detectingLanguages.languages[0]) && (context.prefix || context.suffix)) {
-            detectingLanguages = await browser.i18n.detectLanguage(`${context.prefix}${context.text}${context.suffix}`);
-        }
-        util.log(detectingLanguages);
-        if (detectingLanguages.isReliable && detectingLanguages.languages[0]) {
-            let language = detectingLanguages.languages[0].language.replace(/[\-_].*$/, '');
-            isWordSeparatedBySpace = 'en|fr|de|it|es|pt|sv|no|da|nl|hu|cs|sk|hr|sr|sl|pl|bg|ro'.split('|').includes(language);
+    let segmenter = await wordSegmenter.create(context);
+    let textDirective;
+    let pattern;
+    if (/[\r\n]/.test(fullText) || fullText.length >= settings.exact_match_limit) {
+        let startText = segmenter.short(fullText.replace(/[\r\n][^]*$/, ''));
+        let endText = segmenter.short(fullText.replace(/^[^]*[\n\r]/, ''), true);
+        if (startText.length + endText.length < fullText.length) {
+            textDirective = `${encodeTextDirectiveString(startText)},${encodeTextDirectiveString(endText)}`;
+            pattern = `${regExpQuote(startText)}[^]*?${regExpQuote(endText)}`;
         }
     }
-    let pattern;
-    if ((fullText.length >= settings.exact_match_limit || fullText.includes("\n")) && (rangeMatch = fullText.match(isWordSeparatedBySpace ? /^(\S+(?:\s+\S+){0,4})\s[^]*?\s((?:\S+\s+){1,4}\S+)$/ : new RegExp(`^([^]*?\\S)${boundedPattern}[^]*${boundedPattern}(\\S[^]*?)$`, 'u')))) {
-        let [_, start, end] = rangeMatch;
-        // XXX
-        let startText = start.replace(/[\r\n][^]*$/, '');
-        let endText = end.replace(/^[^]*[\n\r]/, '');
-        textDirective = `${encodeTextDirectiveString(startText)},${encodeTextDirectiveString(endText)}`;
-        pattern = `${regExpQuote(startText)}[^]*?${regExpQuote(endText)}`;
-    } else {
+    if (!textDirective) {
         textDirective = encodeTextDirectiveString(fullText);
         pattern = regExpQuote(fullText);
     }
     if (context.prefix || context.suffix) {
-        let wordCount = isWordSeparatedBySpace ? fullText.split(/\s+/).length : fullText.length;
-        let useContext = wordCount <= 3;
+        let useContext = segmenter.count(fullText) <= 3;
         if (!useContext && innerText && pattern) {
             let match = innerText.match(new RegExp(pattern, 'ig'));
             util.log(match);
@@ -109,8 +185,8 @@ let buildTextDirective = async (context, innerText = null) => {
         if (useContext) {
             let prefix = context.prefix.trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r]/, '').trim();
             let suffix = context.suffix.trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n][^]*$/, '').trim();
-            if (prefix.length > 10) prefix = prefix.replace(isWordSeparatedBySpace ? /(?:^[^]*?\s)(\S+(\s+\S+){2}$)/ : new RegExp(`(?:^[^]*${boundedPattern})(\\S[^]*?$)`, 'u'), '$1');
-            if (suffix.length > 10) suffix = suffix.replace(isWordSeparatedBySpace ? /(^\S+(\s+\S+){2})(?:\s[^]*?)$/ : new RegExp(`(^[^]*?\\S)(?:${boundedPattern}[^]*)$`, 'u'), '$1');
+            prefix = segmenter.short(prefix, true);
+            suffix = segmenter.short(suffix);
             if (suffix) textDirective += `,-${encodeTextDirectiveString(suffix)}`;
             if (prefix) textDirective = `${encodeTextDirectiveString(prefix)}-,${textDirective}`;
         }
