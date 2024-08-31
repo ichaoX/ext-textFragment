@@ -221,11 +221,11 @@ var _helper = {
                 r.setEnd(endContainer, endOffset);
                 s.addRange(r.cloneRange());
                 this.log(r.cloneRange());
-                if (scroll) this.scrollIntoView(startContainer);
+                if (scroll) this.scrollIntoView(startContainer, r);
             }
         }
     },
-    scrollIntoView(node) {
+    scrollIntoView(node, range = null) {
         if (node.nodeType != Node.ELEMENT_NODE) {
             node = node.previousElementSibling || node.parentElement;
         }
@@ -236,6 +236,11 @@ var _helper = {
                 });
             } catch (e) {
                 node.scrollIntoView();
+            }
+            let rRect;
+            if (range && (rRect = range.getBoundingClientRect()) && (rRect.top < 0 || rRect.top > window.innerHeight)) {
+                this.log(rRect);
+                window.scrollBy({ top: Math.round(rRect.top - window.innerHeight / 2) });
             }
         }
     },
