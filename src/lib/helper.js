@@ -17,6 +17,19 @@ var _helper = {
             history.replaceState(null, '', location.href.replace(/(#.*)(?::~:.*)$/, '$1').replace(/^([^#]+)#$/, '$1'));
         }
     },
+    binarySearch(c, r, cr = false) {
+        let l = 0;
+        if (cr && !c(r)) return -1;
+        while (l < r) {
+            let m = Math.floor((l + r) / 2);
+            if (c(m)) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return r;
+    },
     findRange(pattern, scroll = false) {
         let regexp = new RegExp(pattern, 'i');
         let s = getSelection();
@@ -37,32 +50,30 @@ var _helper = {
         };
         let findRangeEnd = (node, search) => {
             let i = 0;
+            let c = (i) => {
+                s.extend(node, i + 1);
+                return test(s.toString(), search);
+            }
             switch (node.nodeType) {
-                case Node.ELEMENT_NODE:
-                    for (i = 0; i < node.childNodes.length; i++) {
-                        s.extend(node, i + 1);
-                        if (test(s.toString(), search)) {
-                            endContainer = node;
-                            endOffset = i + 1;
-                            node = node.childNodes[i];
-                            // this.log(node);
-                            return findRangeEnd(node, search);
-                        }
-                    }
-                    return false;
-                case Node.TEXT_NODE:
-                    for (i = 0; i < node.textContent.length; i++) {
-                        s.extend(node, i + 1);
-                        if (test(s.toString(), search)) {
-                            break;
-                        }
-                    }
-                default:
+                case Node.ELEMENT_NODE: {
+                    i = this.binarySearch(c, node.childNodes.length - 1, true);
+                    if (i === -1) return false;
                     endContainer = node;
                     endOffset = i + 1;
-                    this.log(node, i);
-                    return true;
+                    node = node.childNodes[i];
+                    // this.log(node);
+                    return findRangeEnd(node, search);
+                }
+                case Node.TEXT_NODE: {
+                    i = this.binarySearch(c, node.textContent.length - 1);
+                    break;
+                }
             }
+            s.extend(node, i + 1);
+            endContainer = node;
+            endOffset = i + 1;
+            this.log(node, i);
+            return true;
         };
         // XXX
         let findRangeStart = (node, search, trim = false) => {
@@ -77,19 +88,25 @@ var _helper = {
             let mismatch = false;
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE: {
-                    for (i = 0; i < node.childNodes.length + 1; i++) {
+                    let dec = false;
+                    let c = (i, update = false) => {
                         s.extend(node, i);
                         if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
-                            mismatch = true;
-                            break;
+                            if (update) mismatch = true;
+                            return true;
                         } else if ('string' === typeof search && text === search) {
-                            if (trim && i > 0) i--;
-                            break;
+                            // XXX
+                            if (update && trim && i > 0) dec = true;
+                            return true;
                         } else if (i == node.childNodes.length) {
                             return false;
                         }
-                    }
-                    if (mismatch) i--;
+                        return false;
+                    };
+                    i = this.binarySearch(c, node.childNodes.length, true);
+                    if (i === -1) return false;
+                    c(i, true);
+                    if (dec || mismatch) i--;
                     if (i < 0) return false;
                     s.extend(node, i);
                     if (i < node.childNodes.length) {
@@ -104,14 +121,17 @@ var _helper = {
                     break;
                 }
                 case Node.TEXT_NODE: {
-                    for (i = 0; i < node.textContent.length + 1; i++) {
+                    let c = (i, update = false) => {
                         s.extend(node, i);
                         if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
-                            mismatch = true;
-                            break;
+                            if (update) mismatch = true;
+                            return true;
                         }
-                        if ('string' === typeof search && text === search) break;
-                    }
+                        if ('string' === typeof search && text === search) return true;
+                        return false;
+                    };
+                    i = this.binarySearch(c, node.textContent.length);
+                    c(i, true);
                     if (mismatch) {
                         // XXX
                         let hasWhiteSpace = false;
