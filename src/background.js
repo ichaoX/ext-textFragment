@@ -109,6 +109,54 @@ let wordSegmenter = {
         o.options = options;
         return o;
     },
+    normalize(context0, langOpts = null) {
+        langOpts = langOpts || this.options || {};
+        let context = JSON.parse(JSON.stringify(context0));
+        if (!context.prefix) context.prefix = '';
+        if (!context.suffix) context.suffix = '';
+        if (context.text0 && context.text0.length < context.text.length && langOpts.language && this.hasIntlSegmenter()) {
+            util.log(context);
+            if (!context.extend_left) context.extend_left = '';
+            if (!context.extend_right) context.extend_right = '';
+            try {
+                if (context.text != context.extend_left + context.text0 + context.extend_right) {
+                    throw ' Assertion failed';
+                }
+                let segments = this.get(langOpts.language).segment(context.text);
+                let context1 = {
+                    text: '',
+                    prefix: '',
+                    suffix: '',
+                };
+                let length0 = context.extend_left.length;
+                let length1 = 0;
+                let type = 'prefix';
+                for (let i of segments) {
+                    let t = i.segment;
+                    if (type === 'prefix') {
+                        if (length1 + t.length > length0) {
+                            length0 += context.text0.length;
+                            type = 'text';
+                        }
+                    } else if (type === 'text') {
+                        if (length1 >= length0) type = 'suffix';
+                    }
+                    context1[type] += t;
+                    length1 += t.length;
+                }
+                context.text = context1.text;
+                context.prefix += context1.prefix;
+                context.suffix = context1.suffix + context.suffix;
+                delete context.text0;
+                delete context.extend_left;
+                delete context.extend_right;
+            } catch (e) {
+                util.log(e);
+            }
+        }
+        context.text = context.text.trim().replace(/\r?\n\r?/g, "\n");
+        return context;
+    },
     count(fullText, langOpts = null) {
         if (!fullText) return 0;
         langOpts = langOpts || this.options || {};
@@ -156,10 +204,9 @@ let wordSegmenter = {
 };
 
 let buildTextDirective = async (context, innerText = null) => {
-    let fullText = context.text.trim().replace(/\r?\n\r?/g, "\n");
-    if (!context.prefix) context.prefix = '';
-    if (!context.suffix) context.suffix = '';
     let segmenter = await wordSegmenter.create(context);
+    context = segmenter.normalize(context);
+    let fullText = context.text;
     let textDirective;
     let pattern;
     if (/[\r\n]/.test(fullText) || fullText.length >= settings.exact_match_limit) {

@@ -269,6 +269,12 @@ var _helper = {
                 let startRange = ranges[0];
                 let endRange = ranges[ranges.length - 1];
                 if (extend && s.modify) {
+                    s.removeAllRanges();
+                    s.addRange(startRange.cloneRange());
+                    s.collapseToStart();
+                    s.extend(endRange.endContainer, endRange.endOffset);
+                    i.text0 = s.toString();
+
                     let boundedRegExp;
                     try {
                         boundedRegExp = new RegExp('[\\s\\p{P}\\p{S}]', 'u');
@@ -303,6 +309,7 @@ var _helper = {
                                 }
                             }
                         }
+                        i.extend_right = s.toString();
                         s.removeAllRanges();
                         s.addRange(startRange.cloneRange());
                         s.collapseToStart();
@@ -329,6 +336,7 @@ var _helper = {
                                 }
                             }
                         }
+                        i.extend_left = s.toString();
                     } catch (e) {
                         console.warn(e);
                     }
