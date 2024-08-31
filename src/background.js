@@ -296,7 +296,8 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
         let innerText = null;
         let r = false;
         for (let detail of textDirectiveDetails) {
-            let fullText = detail.fullText, startText = detail.startText, rangeIndex = 0, highlightAll = true, contextRegExp, result = false;
+            let fullText = detail.fullText, startText = detail.startText, contextRegExp;
+            let rangeIndex = 0, highlightAll = true, result = false, rangeIndexText;
             // XXX
             let fixSubSearch = async (searchString = null) => {
                 if (!contextRegExp) return false;
@@ -316,7 +317,8 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                     if (match2.index !== undefined && match2.index === match.index + (match.length == 4 ? match[1].length : 0)) {
                         if (matchDetails.length == 1) highlightAll = false;
                         rangeIndex = i;
-                        util.log(rangeIndex);
+                        rangeIndexText = searchString;
+                        util.log(rangeIndexText, rangeIndex);
                         return true;
                     }
                 }
@@ -355,6 +357,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
             result = await browser.find.find(fullText, {
                 tabId,
                 caseSensitive: false,
+                includeRangeData: true,
             });
             if (result.count == 0 && retry == 0 && startText) {
                 rangeIndex = 0;
@@ -362,10 +365,20 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 result = await browser.find.find(startText, {
                     tabId,
                     caseSensitive: false,
+                    includeRangeData: true,
                 })
             }
             util.log(result);
             if (result.count > 0) {
+                if (result.rangeData && rangeIndexText) {
+                    console.assert(result.count == result.rangeData.length, result);
+                    for (let i = 0; i < Math.min(rangeIndex + 1, result.rangeData.length); i++) {
+                        if (result.rangeData[i].text != rangeIndexText) {
+                            rangeIndex++;
+                        }
+                    }
+                    util.log(rangeIndex);
+                }
                 // scroll into frist
                 await browser.find.highlightResults({
                     tabId,
