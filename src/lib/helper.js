@@ -76,18 +76,23 @@ var _helper = {
             let text;
             let mismatch = false;
             switch (node.nodeType) {
-                case Node.ELEMENT_NODE:
+                case Node.ELEMENT_NODE: {
                     for (i = 0; i < node.childNodes.length + 1; i++) {
                         s.extend(node, i);
                         if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
                             mismatch = true;
+                            break;
                         } else if ('string' === typeof search && text === search) {
-                        } else {
-                            continue;
+                            if (trim && i > 0) i--;
+                            break;
+                        } else if (i == node.childNodes.length) {
+                            return false;
                         }
-                        if (mismatch) i--;
-                        if (i < 0) return false;
-                        s.extend(node, i);
+                    }
+                    if (mismatch) i--;
+                    if (i < 0) return false;
+                    s.extend(node, i);
+                    if (i < node.childNodes.length) {
                         if (!trim) {
                             startContainer = node;
                             startOffset = i;
@@ -96,8 +101,9 @@ var _helper = {
                         // this.log(node);
                         return findRangeStart(node, search, trim);
                     }
-                    return false;
-                case Node.TEXT_NODE:
+                    break;
+                }
+                case Node.TEXT_NODE: {
                     for (i = 0; i < node.textContent.length + 1; i++) {
                         s.extend(node, i);
                         if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
@@ -106,7 +112,6 @@ var _helper = {
                         }
                         if ('string' === typeof search && text === search) break;
                     }
-                default:
                     if (mismatch) {
                         // XXX
                         let hasWhiteSpace = false;
@@ -119,16 +124,18 @@ var _helper = {
                             s.extend(node, i);
                         }
                     }
-                    if (!trim) {
-                        startContainer = node;
-                        startOffset = i;
-                    } else {
-                        endContainer = node;
-                        endOffset = i;
-                    }
-                    this.log(node, i);
-                    return true;
+                    break;
+                }
             }
+            if (!trim) {
+                startContainer = node;
+                startOffset = i;
+            } else {
+                endContainer = node;
+                endOffset = i;
+            }
+            this.log(node, i);
+            return true;
         };
         let removeContext = (text, suffix = "") => {
             if (suffix) {
@@ -176,7 +183,9 @@ var _helper = {
                         let index = details.index + (useGroup ? details[1].length : 0);
                         let prefix = details.input.slice(0, index);
                         let suffix = details.input.slice(index + text.length);
-                        removeContext(text, suffix);
+                        if (!removeContext(text, suffix)) {
+                            this.log('removeContext Failed', text, suffix);
+                        }
                     }
                 }
             }
