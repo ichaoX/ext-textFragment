@@ -120,7 +120,7 @@ let wordSegmenter = {
             if (!context.extend_right) context.extend_right = '';
             try {
                 if (context.text != context.extend_left + context.text0 + context.extend_right) {
-                    throw ' Assertion failed';
+                    throw 'Assertion failed';
                 }
                 let segments = this.get(langOpts.language).segment(context.text);
                 let context1 = {
@@ -241,8 +241,15 @@ let buildTextDirective = async (context, innerText = null) => {
     return textDirective;
 };
 
-let regExpQuote = (str) => {
+let textNormalize = (text) => {
+    if (!text) return '';
+    // FIXME
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
+
+let regExpQuote = (str, normalize = true) => {
     let chars = '.\\+*?[^]$(){}=!<>|:-#';
+    if (normalize) str = textNormalize(str);
     return str.replace(new RegExp(`([${chars.replace(/(.)/g, '\\$1')}])`, 'g'), '\\$1');
 };
 
@@ -301,7 +308,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
             // XXX
             let fixSubSearch = async (searchString = null) => {
                 if (!contextRegExp) return false;
-                if (innerText === null) innerText = await getInnerText(tabId, frameId);
+                if (innerText === null) innerText = textNormalize(await getInnerText(tabId, frameId));
                 let matchDetails = regExpExecAll(contextRegExp, innerText);
                 if (!matchDetails.length) return false;
                 let match = matchDetails[0];
@@ -317,7 +324,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                     if (match2.index !== undefined && match2.index === match.index + (match.length == 4 ? match[1].length : 0)) {
                         if (matchDetails.length == 1) highlightAll = false;
                         rangeIndex = i;
-                        rangeIndexText = searchString;
+                        rangeIndexText = textNormalize(searchString);
                         util.log(rangeIndexText, rangeIndex);
                         return true;
                     }
@@ -351,7 +358,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
             if (r) continue;
             if (fullText.includes("\n")) {
                 if (!contextRegExp) contextRegExp = new RegExp(regExpQuote(fullText), 'ig');
-                fullText = fullText.trim().replace(/\n[^]*$/, '');
+                fullText = fullText.trim().replace(/\n[^]*$/, '').trim();
                 await fixSubSearch(fullText);
             }
             result = await browser.find.find(fullText, {
@@ -373,11 +380,15 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 if (result.rangeData && rangeIndexText) {
                     console.assert(result.count == result.rangeData.length, result);
                     for (let i = 0; i < Math.min(rangeIndex + 1, result.rangeData.length); i++) {
-                        if (result.rangeData[i].text != rangeIndexText) {
+                        if (textNormalize(result.rangeData[i].text) != rangeIndexText) {
                             rangeIndex++;
                         }
                     }
                     util.log(rangeIndex);
+                }
+                if (rangeIndex > result.count) {
+                    util.log('Assertion failed: rangeIndex=', rangeIndex);
+                    rangeIndex = 0;
                 }
                 // scroll into frist
                 await browser.find.highlightResults({
@@ -569,7 +580,7 @@ let action = {
         }
         util.log(ranges);
         let directives = [];
-        let innerText = await getInnerText(tabId, frameId);
+        let innerText = textNormalize(await getInnerText(tabId, frameId));
         for (let range of ranges) {
             directives.push(`text=${await buildTextDirective(range, innerText)}`);
         }

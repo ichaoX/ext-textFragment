@@ -7,6 +7,11 @@ var _helper = {
         highlighted: false,
         textDirectives: null,
     },
+    textNormalize(text) {
+        if (!text) return '';
+        // FIXME
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    },
     removeFragmentDirectives() {
         console.info(location.href);
         if (!location.hash) return;
@@ -42,8 +47,9 @@ var _helper = {
         let r = new Range();
         let result = false;
         let test = (input, search) => {
+            input = this.textNormalize(input);
             if (typeof search === 'string') {
-                return input.includes(search);
+                return input.includes(this.textNormalize(search));
             } else {
                 return search.test(input);
             }
@@ -91,10 +97,10 @@ var _helper = {
                     let dec = false;
                     let c = (i, update = false) => {
                         s.extend(node, i);
-                        if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
+                        if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = this.textNormalize(s.toString())).trim() || !test(text, search)) {
                             if (update) mismatch = true;
                             return true;
-                        } else if ('string' === typeof search && text === search) {
+                        } else if ('string' === typeof search && text === this.textNormalize(search)) {
                             // XXX
                             if (update && trim && i > 0) dec = true;
                             return true;
@@ -169,7 +175,7 @@ var _helper = {
                 if (!findRangeStart(container, suffix, true)) {
                     return false;
                 }
-                console.assert(s.toString().trim() === suffix.trim(), `suffix ${JSON.stringify(suffix)} ${JSON.stringify(s.toString())}`);
+                console.assert(this.textNormalize(s.toString()).trim() === this.textNormalize(suffix).trim(), `suffix ${JSON.stringify(suffix)} ${JSON.stringify(s.toString())}`);
             }
             s.removeAllRanges();
             r.setStart(endContainer, endOffset);
@@ -181,7 +187,7 @@ var _helper = {
             if (!findRangeStart(container, text)) {
                 return false;
             }
-            console.assert(s.toString() === text, `text ${JSON.stringify(text)} ${JSON.stringify(s.toString())}`);
+            console.assert(this.textNormalize(s.toString()) === this.textNormalize(text), `text ${JSON.stringify(text)} ${JSON.stringify(s.toString())}`);
             return true;
         };
         document.documentElement.classList.add('ext-text-fragment--selectable');
@@ -195,7 +201,7 @@ var _helper = {
                 s.collapseToEnd();
                 if (findRangeStart(container, regexp)) {
                     result = true;
-                    let details = regexp.exec(s.toString());
+                    let details = regexp.exec(this.textNormalize(s.toString()));
                     console.assert(!!details, `context ${regexp} ${JSON.stringify(s.toString())}`);
                     if (details && details[details.length == 4 ? 2 : 0] != details.input) {
                         let useGroup = details.length == 4;
