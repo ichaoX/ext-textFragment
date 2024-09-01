@@ -2,7 +2,7 @@
     "description": "Auto scroll to text fragment (#:~:text) and allow you to create link for selected text.",
     "manifest_version": 2,
     "name": "Text Fragment",
-    "version": "0.7",
+    "version": "0.8",
     "icons": {
         "32": "/icon.svg",
         "128": "/icon.svg"
