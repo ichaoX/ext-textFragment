@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "Fragmen Teks"
-    },
     "ext_description": {
         "message": "Gulir otomatis ke fragmen teks (#:~:text) dan memungkinkan Anda membuat tautan untuk teks yang dipilih."
     },

@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "텍스트 조각"
-    },
     "ext_description": {
         "message": "텍스트 조각(#:~:text)으로 자동 스크롤하고 선택된 텍스트에 대한 링크를 생성할 수 있습니다."
     },

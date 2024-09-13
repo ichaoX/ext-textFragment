@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "Fragmento de texto"
-    },
     "ext_description": {
         "message": "Desplazamiento automático al fragmento de texto (#:~:text) y permite crear un enlace para el texto seleccionado."
     },

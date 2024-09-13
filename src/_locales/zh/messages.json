@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "文本片段"
-    },
     "ext_description": {
         "message": "自动滚动到文本片段 (#:~:text) 并允许你为选定文本创建链接。"
     },

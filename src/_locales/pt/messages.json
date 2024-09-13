@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "Fragmento de Texto"
-    },
     "ext_description": {
         "message": "Role automaticamente para o fragmento de texto (#:~:text) e permita que você crie um link para o texto selecionado."
     },

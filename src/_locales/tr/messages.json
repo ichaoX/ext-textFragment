@@ -1,7 +1,4 @@
 {
-    "ext_name": {
-        "message": "Metin Parçası"
-    },
     "ext_description": {
         "message": "Metin parçasına (#:~:text) otomatik kaydırma yapar ve seçili metin için bağlantı oluşturmanıza izin verir."
     },
