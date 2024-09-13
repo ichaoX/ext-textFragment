@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "텍스트 조각"
+    },
+    "ext_description": {
+        "message": "텍스트 조각(#:~:text)으로 자동 스크롤하고 선택된 텍스트에 대한 링크를 생성할 수 있습니다."
+    },
+    "action_title": {
+        "message": "선택된 텍스트에 대한 링크 복사 / 하이라이트 복원"
+    },
+    "menu_copy_link": {
+        "message": "선택된 텍스트에 대한 링크 복사"
+    },
+    "menu_remove_highlight": {
+        "message": "하이라이트 제거"
+    },
+    "menu_restore_highlight": {
+        "message": "하이라이트 복원"
+    },
+    "label_find": {
+        "message": "텍스트 조각으로 스크롤"
+    },
+    "label_copy_link": {
+        "message": "선택된 텍스트에 대한 링크 생성"
+    },
+    "label_auto_disable": {
+        "message": "기본적으로 지원될 때 이 확장 기능 비활성화"
+    },
+    "label_remove_fragment_directive": {
+        "message": "조각 지시문 자동 제거"
+    },
+    "label_highlight_type": {
+        "message": "하이라이트 방법"
+    },
+    "label_keep_url_hash": {
+        "message": "URL에서 조각 식별자 유지"
+    },
+    "label_extend_incomplete_word": {
+        "message": "불완전한 단어 자동 확장"
+    },
+    "label_exact_match_limit": {
+        "message": "정확한 일치 텍스트 조각 생성을 위한 문자 제한"
+    },
+    "natively_supported": {
+        "message": "기본적으로 지원됨"
+    },
+    "tips_natively_supported": {
+        "message": "이 브라우저가 이 기능을 기본적으로 지원하므로 이 옵션이 더 이상 효과적이지 않을 수 있습니다."
+    },
+    "options": {
+        "message": "옵션"
+    },
+    "save": {
+        "message": "저장"
+    },
+    "auto": {
+        "message": "자동"
+    }
+}

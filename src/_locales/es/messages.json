@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Fragmento de texto"
+    },
+    "ext_description": {
+        "message": "Desplazamiento automático al fragmento de texto (#:~:text) y permite crear un enlace para el texto seleccionado."
+    },
+    "action_title": {
+        "message": "Copiar enlace al texto seleccionado / Restaurar resaltado"
+    },
+    "menu_copy_link": {
+        "message": "Copiar enlace al texto seleccionado"
+    },
+    "menu_remove_highlight": {
+        "message": "Eliminar resaltado"
+    },
+    "menu_restore_highlight": {
+        "message": "Restaurar resaltado"
+    },
+    "label_find": {
+        "message": "Desplazarse al fragmento de texto"
+    },
+    "label_copy_link": {
+        "message": "Crear enlace para el texto seleccionado"
+    },
+    "label_auto_disable": {
+        "message": "Desactivar esta función de la extensión cuando esté soportada de forma nativa"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Eliminar automáticamente la directiva del fragmento"
+    },
+    "label_highlight_type": {
+        "message": "Método de resaltado"
+    },
+    "label_keep_url_hash": {
+        "message": "Mantener el identificador del fragmento en la URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Expandir automáticamente palabras incompletas"
+    },
+    "label_exact_match_limit": {
+        "message": "Límite de caracteres para generar fragmento de texto exacto"
+    },
+    "natively_supported": {
+        "message": "soportado de forma nativa"
+    },
+    "tips_natively_supported": {
+        "message": "Esta opción puede que ya no sea efectiva, ya que este navegador soporta esta función de forma nativa."
+    },
+    "options": {
+        "message": "Opciones"
+    },
+    "save": {
+        "message": "Guardar"
+    },
+    "auto": {
+        "message": "Automático"
+    }
+}

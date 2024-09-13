@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Fragmento de Texto"
+    },
+    "ext_description": {
+        "message": "Role automaticamente para o fragmento de texto (#:~:text) e permita que você crie um link para o texto selecionado."
+    },
+    "action_title": {
+        "message": "Copiar link para o texto selecionado / Restaurar destaque"
+    },
+    "menu_copy_link": {
+        "message": "Copiar Link para o Texto Selecionado"
+    },
+    "menu_remove_highlight": {
+        "message": "Remover Destaque"
+    },
+    "menu_restore_highlight": {
+        "message": "Restaurar Destaque"
+    },
+    "label_find": {
+        "message": "Rolar para o fragmento de texto"
+    },
+    "label_copy_link": {
+        "message": "Criar link para o texto selecionado"
+    },
+    "label_auto_disable": {
+        "message": "Desativar este recurso da extensão quando nativamente suportado"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Remover automaticamente a diretiva de fragmento"
+    },
+    "label_highlight_type": {
+        "message": "Método de Destaque"
+    },
+    "label_keep_url_hash": {
+        "message": "Manter identificador de fragmento na URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Expandir automaticamente palavras incompletas"
+    },
+    "label_exact_match_limit": {
+        "message": "Limite de caracteres para gerar fragmento de texto com correspondência exata"
+    },
+    "natively_supported": {
+        "message": "suportado nativamente"
+    },
+    "tips_natively_supported": {
+        "message": "Esta opção pode não ser mais eficaz, pois este navegador suporta nativamente este recurso."
+    },
+    "options": {
+        "message": "Opções"
+    },
+    "save": {
+        "message": "Salvar"
+    },
+    "auto": {
+        "message": "Automático"
+    }
+}

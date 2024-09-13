@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Fragmen Teks"
+    },
+    "ext_description": {
+        "message": "Gulir otomatis ke fragmen teks (#:~:text) dan memungkinkan Anda membuat tautan untuk teks yang dipilih."
+    },
+    "action_title": {
+        "message": "Salin tautan ke teks yang dipilih / Pulihkan sorotan"
+    },
+    "menu_copy_link": {
+        "message": "Salin Tautan ke Teks yang Dipilih"
+    },
+    "menu_remove_highlight": {
+        "message": "Hapus Sorotan"
+    },
+    "menu_restore_highlight": {
+        "message": "Pulihkan Sorotan"
+    },
+    "label_find": {
+        "message": "Gulir ke fragmen teks"
+    },
+    "label_copy_link": {
+        "message": "Buat tautan untuk teks yang dipilih"
+    },
+    "label_auto_disable": {
+        "message": "Nonaktifkan fitur ekstensi ini saat didukung secara bawaan"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Hapus otomatis direktif fragmen"
+    },
+    "label_highlight_type": {
+        "message": "Metode Sorotan"
+    },
+    "label_keep_url_hash": {
+        "message": "Simpan pengenal fragmen di URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Perluas kata yang tidak lengkap secara otomatis"
+    },
+    "label_exact_match_limit": {
+        "message": "Batas karakter untuk menghasilkan fragmen teks yang cocok persis"
+    },
+    "natively_supported": {
+        "message": "didukung secara bawaan"
+    },
+    "tips_natively_supported": {
+        "message": "Opsi ini mungkin tidak lagi efektif karena browser ini mendukung fitur ini secara bawaan."
+    },
+    "options": {
+        "message": "Opsi"
+    },
+    "save": {
+        "message": "Simpan"
+    },
+    "auto": {
+        "message": "Otomatis"
+    }
+}

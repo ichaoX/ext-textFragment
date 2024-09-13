@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "テキストフラグメント"
+    },
+    "ext_description": {
+        "message": "テキストフラグメント（#:~:text）へ自動スクロールし、選択したテキストにリンクを作成することができます。"
+    },
+    "action_title": {
+        "message": "選択したテキストへのリンクをコピー / ハイライトを復元"
+    },
+    "menu_copy_link": {
+        "message": "選択したテキストへのリンクをコピー"
+    },
+    "menu_remove_highlight": {
+        "message": "ハイライトを削除"
+    },
+    "menu_restore_highlight": {
+        "message": "ハイライトを復元"
+    },
+    "label_find": {
+        "message": "テキストフラグメントへスクロール"
+    },
+    "label_copy_link": {
+        "message": "選択したテキストにリンクを作成"
+    },
+    "label_auto_disable": {
+        "message": "ネイティブサポートされている場合、この拡張機能の機能を無効にする"
+    },
+    "label_remove_fragment_directive": {
+        "message": "フラグメントディレクティブを自動削除"
+    },
+    "label_highlight_type": {
+        "message": "ハイライト方法"
+    },
+    "label_keep_url_hash": {
+        "message": "URLにフラグメント識別子を保持"
+    },
+    "label_extend_incomplete_word": {
+        "message": "不完全な単語を自動的に拡張"
+    },
+    "label_exact_match_limit": {
+        "message": "正確な一致テキストフラグメントを生成するための文字数制限"
+    },
+    "natively_supported": {
+        "message": "ネイティブサポート"
+    },
+    "tips_natively_supported": {
+        "message": "このオプションは、ブラウザがこの機能をネイティブにサポートしているため、効果がない可能性があります。"
+    },
+    "options": {
+        "message": "オプション"
+    },
+    "save": {
+        "message": "保存"
+    },
+    "auto": {
+        "message": "自動"
+    }
+}

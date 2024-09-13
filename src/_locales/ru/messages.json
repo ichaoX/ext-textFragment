@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Фрагмент текста"
+    },
+    "ext_description": {
+        "message": "Автоматическая прокрутка к фрагменту текста (#:~:text) и возможность создать ссылку на выделенный текст."
+    },
+    "action_title": {
+        "message": "Скопировать ссылку на выделенный текст / Восстановить выделение"
+    },
+    "menu_copy_link": {
+        "message": "Копировать ссылку на выделенный текст"
+    },
+    "menu_remove_highlight": {
+        "message": "Удалить выделение"
+    },
+    "menu_restore_highlight": {
+        "message": "Восстановить выделение"
+    },
+    "label_find": {
+        "message": "Прокрутка к фрагменту текста"
+    },
+    "label_copy_link": {
+        "message": "Создать ссылку на выделенный текст"
+    },
+    "label_auto_disable": {
+        "message": "Отключить функцию расширения при наличии нативной поддержки"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Автоматическое удаление директивы фрагмента"
+    },
+    "label_highlight_type": {
+        "message": "Метод выделения"
+    },
+    "label_keep_url_hash": {
+        "message": "Сохранить идентификатор фрагмента в URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Автоматическое расширение неполных слов"
+    },
+    "label_exact_match_limit": {
+        "message": "Ограничение символов для создания точного совпадения фрагмента текста"
+    },
+    "natively_supported": {
+        "message": "нативная поддержка"
+    },
+    "tips_natively_supported": {
+        "message": "Эта опция может больше не быть эффективной, так как браузер нативно поддерживает эту функцию."
+    },
+    "options": {
+        "message": "Опции"
+    },
+    "save": {
+        "message": "Сохранить"
+    },
+    "auto": {
+        "message": "Авто"
+    }
+}

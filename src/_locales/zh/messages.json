@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "文本片段"
+    },
+    "ext_description": {
+        "message": "自动滚动到文本片段 (#:~:text) 并允许你为选定文本创建链接。"
+    },
+    "action_title": {
+        "message": "复制选定文本的链接 / 恢复高亮"
+    },
+    "menu_copy_link": {
+        "message": "复制选定文本的链接"
+    },
+    "menu_remove_highlight": {
+        "message": "移除高亮"
+    },
+    "menu_restore_highlight": {
+        "message": "恢复高亮"
+    },
+    "label_find": {
+        "message": "滚动到文本片段"
+    },
+    "label_copy_link": {
+        "message": "为选定文本创建链接"
+    },
+    "label_auto_disable": {
+        "message": "在原生支持时禁用此扩展功能"
+    },
+    "label_remove_fragment_directive": {
+        "message": "自动移除片段指令"
+    },
+    "label_highlight_type": {
+        "message": "高亮方法"
+    },
+    "label_keep_url_hash": {
+        "message": "在 URL 中保留片段标识符"
+    },
+    "label_extend_incomplete_word": {
+        "message": "自动扩展不完整的词"
+    },
+    "label_exact_match_limit": {
+        "message": "生成精确匹配文本片段的字符限制"
+    },
+    "natively_supported": {
+        "message": "原生支持"
+    },
+    "tips_natively_supported": {
+        "message": "此选项可能不再有效，因为此浏览器原生支持此功能。"
+    },
+    "options": {
+        "message": "选项"
+    },
+    "save": {
+        "message": "保存"
+    },
+    "auto": {
+        "message": "自动"
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Metin Parçası"
+    },
+    "ext_description": {
+        "message": "Metin parçasına (#:~:text) otomatik kaydırma yapar ve seçili metin için bağlantı oluşturmanıza izin verir."
+    },
+    "action_title": {
+        "message": "Seçili metin için bağlantıyı kopyala / Vurgulamayı geri yükle"
+    },
+    "menu_copy_link": {
+        "message": "Seçili Metin İçin Bağlantıyı Kopyala"
+    },
+    "menu_remove_highlight": {
+        "message": "Vurgulamayı Kaldır"
+    },
+    "menu_restore_highlight": {
+        "message": "Vurgulamayı Geri Yükle"
+    },
+    "label_find": {
+        "message": "Metin parçasına kaydır"
+    },
+    "label_copy_link": {
+        "message": "Seçili metin için bağlantı oluştur"
+    },
+    "label_auto_disable": {
+        "message": "Bu uzantı özelliğini yerel olarak destekleniyorsa devre dışı bırak"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Parça direktifini otomatik olarak kaldır"
+    },
+    "label_highlight_type": {
+        "message": "Vurgulama yöntemi"
+    },
+    "label_keep_url_hash": {
+        "message": "URL'de parça tanımlayıcısını koru"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Tamamlanmamış kelimeleri otomatik olarak genişlet"
+    },
+    "label_exact_match_limit": {
+        "message": "Tam eşleşen metin parçası oluşturmak için karakter sınırı"
+    },
+    "natively_supported": {
+        "message": "yerel olarak desteklenen"
+    },
+    "tips_natively_supported": {
+        "message": "Bu seçenek artık etkili olmayabilir, çünkü bu tarayıcı bu özelliği yerel olarak destekliyor."
+    },
+    "options": {
+        "message": "Seçenekler"
+    },
+    "save": {
+        "message": "Kaydet"
+    },
+    "auto": {
+        "message": "Otomatik"
+    }
+}
