@@ -1,0 +1,59 @@
+{
+    "ext_name": {
+        "message": "Text Fragment"
+    },
+    "ext_description": {
+        "message": "Auto scroll to text fragment (#:~:text) and allow you to create link for selected text."
+    },
+    "action_title": {
+        "message": "Copy link to selected text / Restore highlight"
+    },
+    "menu_copy_link": {
+        "message": "Copy Link to Selected Text"
+    },
+    "menu_remove_highlight": {
+        "message": "Remove Highlight"
+    },
+    "menu_restore_highlight": {
+        "message": "Restore Highlight"
+    },
+    "label_find": {
+        "message": "Scroll to text fragment"
+    },
+    "label_copy_link": {
+        "message": "Create link for selected text"
+    },
+    "label_auto_disable": {
+        "message": "Disable this extension feature when natively supported"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Auto remove fragment directive"
+    },
+    "label_highlight_type": {
+        "message": "Highlight method"
+    },
+    "label_keep_url_hash": {
+        "message": "Keep fragment identifier in URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Auto expand incomplete words"
+    },
+    "label_exact_match_limit": {
+        "message": "Character limit for generating exact matching text fragment"
+    },
+    "natively_supported": {
+        "message": "natively supported"
+    },
+    "tips_natively_supported": {
+        "message": "This option may no longer be effective, as this browser natively supports this feature."
+    },
+    "options": {
+        "message": "Options"
+    },
+    "save": {
+        "message": "Save"
+    },
+    "auto": {
+        "message": "Auto"
+    }
+}

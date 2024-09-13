@@ -650,21 +650,21 @@ if (browser.menus) {
 
     browser.menus.create({
         id: MENU_IDS.COPY_LINK,
-        title: "Copy Link to Selected Text",
+        title: browser.i18n.getMessage("menu_copy_link"),
         contexts: ["selection"],
     });
 
     try {
         browser.menus.create({
             id: MENU_IDS.REMOVE_HIGHLIGHT,
-            title: "Remove Highlight",
+            title: browser.i18n.getMessage("menu_remove_highlight"),
             contexts: ["page"],
             visible: visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT],
         });
 
         browser.menus.create({
             id: MENU_IDS.RESTORE_HIGHLIGHT,
-            title: "Restore Highlight",
+            title: browser.i18n.getMessage("menu_restore_highlight"),
             contexts: ["page"],
             visible: visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT],
         });

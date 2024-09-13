@@ -81,3 +81,26 @@
     }
 
 })();
+
+(() => {
+    let i18n = (v0) => {
+        if (!v0 || 'string' !== typeof v0) return v0;
+        return v0.replace(/__MSG_([a-z0-9_\-@]+)__/ig, (key, name) => {
+            let message = browser.i18n.getMessage(name);
+            if (!message) return key;
+            return message;
+        });
+    };
+    let node;
+    let walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+    while (node = walker.nextNode()) {
+        let v0 = node.textContent;
+        let v = i18n(v0);
+        if (v !== v0) node.textContent = v;
+    }
+    [...document.querySelectorAll('[title]')].forEach((node) => {
+        let v0 = node.getAttribute('title');
+        let v = i18n(v0);
+        if (v !== v0) node.setAttribute('title', v);
+    });
+})();

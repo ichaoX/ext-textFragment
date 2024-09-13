@@ -1,7 +1,8 @@
 {
-    "description": "Auto scroll to text fragment (#:~:text) and allow you to create link for selected text.",
     "manifest_version": 2,
-    "name": "Text Fragment",
+    "name": "__MSG_ext_name__",
+    "description": "__MSG_ext_description__",
+    "default_locale": "en",
     "version": "0.8",
     "icons": {
         "32": "/icon.svg",
@@ -16,7 +17,7 @@
         "<all_urls>"
     ],
     "browser_action": {
-        "default_title": "Copy link to selected text / Restore highlight",
+        "default_title": "__MSG_action_title__",
         "default_icon": "/icon.svg"
     },
     "background": {

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="/icon.svg">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Text Fragment Options</title>
+    <title>__MSG_options__ - __MSG_ext_name__</title>
     <meta name="color-scheme" content="dark light">
     <style>
         @media (prefers-color-scheme: dark) {
@@ -72,45 +72,44 @@
     <form class="section options" data-native-supported="0">
         <fieldset class="options-find">
             <legend>
-                Scroll to text fragment
-                <span class="native-supported-only"
-                    title="This option may no longer be effective, as this browser natively supports this feature.">
-                    ( natively supported )</span>
+                __MSG_label_find__
+                <span class="native-supported-only" title="__MSG_tips_natively_supported__">
+                    ( __MSG_natively_supported__ )</span>
             </legend>
             <label class="native-supported-only">
                 <input type="checkbox" data-setting="auto_disable" />
-                Disable this extension feature when natively supported
+                __MSG_label_auto_disable__
             </label>
             <label>
                 <input type="checkbox" data-setting="remove_fragment_directive" />
-                Auto remove fragment directive
+                __MSG_label_remove_fragment_directive__
             </label>
             <label>
-                Highlight method:
+                __MSG_label_highlight_type__:
                 <select data-setting="highlight_type">
-                    <option value="auto">Auto</option>
+                    <option value="auto">__MSG_auto__</option>
                     <option value="find">Find API</option>
                     <option value="selection">Selection API</option>
                 </select>
             </label>
         </fieldset>
         <fieldset>
-            <legend>Create link for selected text</legend>
+            <legend>__MSG_label_copy_link__</legend>
             <label>
                 <input type="checkbox" data-setting="keep_url_hash" />
-                Keep fragment identifier in URL
+                __MSG_label_keep_url_hash__
             </label>
             <label>
                 <input type="checkbox" data-setting="extend_incomplete_word" />
-                Auto expand incomplete words
+                __MSG_label_extend_incomplete_word__
             </label>
             <label>
-                Character limit for generating exact matching text fragment:
+                __MSG_label_exact_match_limit__:
                 <input type="number" min="5" step="1" required data-setting="exact_match_limit" />
             </label>
         </fieldset>
         <div class="btn-group">
-            <button type="button" class="save">Save</button>
+            <button type="button" class="save">__MSG_save__</button>
             <!-- <button type="button" class="reset right">Reset to default</button> -->
             <span class="message"></span>
         </div>
