@@ -398,6 +398,8 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 });
                 // highlight all
                 if (highlightAll && result.count > 1 && rangeIndex == 0) {
+                    // FIX: https://bugzilla.mozilla.org/show_bug.cgi?id=1918589
+                    if (autoScroll) await new Promise(t => setTimeout(t, 500));
                     await browser.find.highlightResults({
                         tabId,
                     });
