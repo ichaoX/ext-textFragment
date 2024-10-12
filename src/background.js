@@ -509,13 +509,20 @@ let removeFragmentDirectives = async (tabId, frameId) => {
     }
 };
 
-let copyText = async (text, options = {}) => {
-    let tabId = options.tabId;
-    let frameId = options.frameId;
+let copyToClipboard = async (text, html) => {
+    function oncopy(event) {
+        document.removeEventListener("copy", oncopy, true);
+        // Hide the event from the page to prevent tampering.
+        event.stopImmediatePropagation();
+        // Overwrite the clipboard content.
+        event.preventDefault();
+        if (text !== undefined) event.clipboardData.setData("text/plain", text);
+        if (html !== undefined) event.clipboardData.setData("text/html", html);
+    }
+    document.addEventListener("copy", oncopy, true);
     try {
-        await loadHelper(tabId, frameId,
-            `_helper.copyToClipboard(${JSON.stringify(text)});`
-        );
+        // Requires the clipboardWrite permission, or a user gesture:
+        document.execCommand("copy");
     } catch (e) {
         console.warn(e);
     }
@@ -599,10 +606,7 @@ let action = {
         urlObj.hash = urlObj.hash.replace(/(:~:.*$)|$/, ':~:' + directives.join('&'));
         let href = urlObj.href;
         util.log(href);
-        await copyText(href, {
-            tabId,
-            frameId,
-        });
+        await copyToClipboard(href);
     },
     async removeHighlight(tabId, frameId) {
         await browser.tabs.executeScript(tabId, {

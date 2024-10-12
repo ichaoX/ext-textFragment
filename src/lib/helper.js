@@ -410,22 +410,6 @@ var _helper = {
         }
         return t;
     },
-    copyToClipboard(text, html) {
-        function oncopy(event) {
-            document.removeEventListener("copy", oncopy, true);
-            // Hide the event from the page to prevent tampering.
-            event.stopImmediatePropagation();
-
-            // Overwrite the clipboard content.
-            event.preventDefault();
-            if (text !== undefined) event.clipboardData.setData("text/plain", text);
-            if (html !== undefined) event.clipboardData.setData("text/html", html);
-        }
-        document.addEventListener("copy", oncopy, true);
-
-        // Requires the clipboardWrite permission, or a user gesture:
-        document.execCommand("copy");
-    },
 };
 
 true;
