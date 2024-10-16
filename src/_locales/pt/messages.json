@@ -36,7 +36,13 @@
         "message": "Expandir automaticamente palavras incompletas"
     },
     "label_exact_match_limit": {
-        "message": "Limite de caracteres para gerar fragmento de texto com correspondência exata"
+        "message": "Limite de caracteres para correspondências exatas"
+    },
+    "label_range_match_word_count": {
+        "message": "Contagem de palavras para correspondências baseadas em intervalo"
+    },
+    "label_context_word_count": {
+        "message": "Contagem de palavras para contexto"
     },
     "natively_supported": {
         "message": "suportado nativamente"

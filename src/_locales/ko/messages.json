@@ -36,7 +36,13 @@
         "message": "불완전한 단어 자동 확장"
     },
     "label_exact_match_limit": {
-        "message": "정확한 일치 텍스트 조각 생성을 위한 문자 제한"
+        "message": "정확한 일치의 문자 제한"
+    },
+    "label_range_match_word_count": {
+        "message": "범위 기반 일치의 단어 수"
+    },
+    "label_context_word_count": {
+        "message": "맥락의 단어 수"
     },
     "natively_supported": {
         "message": "기본적으로 지원됨"

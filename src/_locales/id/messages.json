@@ -36,7 +36,13 @@
         "message": "Perluas kata yang tidak lengkap secara otomatis"
     },
     "label_exact_match_limit": {
-        "message": "Batas karakter untuk menghasilkan fragmen teks yang cocok persis"
+        "message": "Batas karakter untuk pencocokan tepat"
+    },
+    "label_range_match_word_count": {
+        "message": "Jumlah kata untuk pencocokan berbasis rentang"
+    },
+    "label_context_word_count": {
+        "message": "Jumlah kata untuk konteks"
     },
     "natively_supported": {
         "message": "didukung secara bawaan"

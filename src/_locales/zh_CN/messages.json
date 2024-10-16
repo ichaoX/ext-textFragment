@@ -36,7 +36,13 @@
         "message": "自动扩展不完整的词"
     },
     "label_exact_match_limit": {
-        "message": "生成精确匹配文本片段的字符限制"
+        "message": "精确匹配的字符限制"
+    },
+    "label_range_match_word_count": {
+        "message": "基于范围的匹配的词数"
+    },
+    "label_context_word_count": {
+        "message": "上下文的词数"
     },
     "natively_supported": {
         "message": "原生支持"

@@ -36,7 +36,13 @@
         "message": "Tamamlanmamış kelimeleri otomatik olarak genişlet"
     },
     "label_exact_match_limit": {
-        "message": "Tam eşleşen metin parçası oluşturmak için karakter sınırı"
+        "message": "Tam eşleşmeler için karakter sınırı"
+    },
+    "label_range_match_word_count": {
+        "message": "Aralık tabanlı eşleşmeler için kelime sayısı"
+    },
+    "label_context_word_count": {
+        "message": "Bağlam için kelime sayısı"
     },
     "natively_supported": {
         "message": "yerel olarak desteklenen"

@@ -36,7 +36,13 @@
         "message": "不完全な単語を自動的に拡張"
     },
     "label_exact_match_limit": {
-        "message": "正確な一致テキストフラグメントを生成するための文字数制限"
+        "message": "正確な一致のための文字制限"
+    },
+    "label_range_match_word_count": {
+        "message": "範囲ベースの一致の単語数"
+    },
+    "label_context_word_count": {
+        "message": "コンテキストの単語数"
     },
     "natively_supported": {
         "message": "ネイティブサポート"
