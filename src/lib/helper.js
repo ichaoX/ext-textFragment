@@ -35,8 +35,9 @@ var _helper = {
         }
         return r;
     },
-    findRange(pattern, scroll = false) {
+    findRange(pattern, scroll = false, startPattern = null) {
         let regexp = new RegExp(pattern, 'i');
+        let regexp0 = startPattern ? new RegExp(startPattern, 'i') : null;
         let s = getSelection();
         let rl = [];
         for (let i = 0; i < s.rangeCount; i++) {
@@ -44,6 +45,7 @@ var _helper = {
         }
         let container = document.body || document.documentElement;
         let startContainer, startOffset, endContainer, endOffset, endRange;
+        let state, endRange1;
         let r = new Range();
         let result = false;
         let test = (input, search) => {
@@ -81,14 +83,10 @@ var _helper = {
             this.log(node, i);
             return true;
         };
-        // XXX
-        let findRangeStart = (node, search, trim = false) => {
-            if (!endRange) {
-                r.setStart(endContainer, endOffset);
-                r.setEnd(endContainer, endOffset);
-                r.collapse(false);
-                endRange = r.cloneRange();
-            }
+        let findRangeStart = (node, search, endRange, trim = false) => {
+            s.removeAllRanges();
+            s.addRange(endRange);
+
             let i = 0;
             let text;
             let mismatch = false;
@@ -122,7 +120,7 @@ var _helper = {
                         }
                         node = node.childNodes[i];
                         // this.log(node);
-                        return findRangeStart(node, search, trim);
+                        return findRangeStart(node, search, endRange, trim);
                     }
                     break;
                 }
@@ -172,7 +170,7 @@ var _helper = {
                 endRange = r.cloneRange();
                 s.addRange(r.cloneRange());
                 // this.log(JSON.stringify(suffix));
-                if (!findRangeStart(container, suffix, true)) {
+                if (!findRangeStart(container, suffix, endRange, true)) {
                     return false;
                 }
                 console.assert(this.textNormalize(s.toString()).trim() === this.textNormalize(suffix).trim(), `suffix ${JSON.stringify(suffix)} ${JSON.stringify(s.toString())}`);
@@ -184,7 +182,7 @@ var _helper = {
             endRange = r.cloneRange();
             s.addRange(r.cloneRange());
             // this.log(JSON.stringify(text));
-            if (!findRangeStart(container, text)) {
+            if (!findRangeStart(container, text, endRange)) {
                 return false;
             }
             console.assert(this.textNormalize(s.toString()) === this.textNormalize(text), `text ${JSON.stringify(text)} ${JSON.stringify(s.toString())}`);
@@ -197,9 +195,30 @@ var _helper = {
             s.addRange(r.cloneRange());
             if (!test(s.toString(), regexp)) return result;
             s.collapseToStart();
+            if (regexp0) {
+                if (!findRangeEnd(container, regexp0)) return result;
+                r.setStart(endContainer, endOffset);
+                r.setEnd(endContainer, endOffset);
+                r.collapse(false);
+                endRange1 = r.cloneRange();
+            }
             if (findRangeEnd(container, regexp)) {
                 s.collapseToEnd();
-                if (findRangeStart(container, regexp)) {
+
+                r.setStart(endContainer, endOffset);
+                r.setEnd(endContainer, endOffset);
+                r.collapse(false);
+                endRange = r.cloneRange();
+
+                if (regexp0) {
+                    state = findRangeStart(container, regexp0, endRange1);
+                    s.collapseToStart();
+                    s.extend(endContainer, endOffset);
+                }else{
+                    state = findRangeStart(container, regexp, endRange);
+                }
+
+                if (state) {
                     result = true;
                     let details = regexp.exec(this.textNormalize(s.toString()));
                     console.assert(!!details, `context ${regexp} ${JSON.stringify(s.toString())}`);

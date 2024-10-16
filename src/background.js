@@ -37,7 +37,7 @@ let parseTextDirectives = (rawDirectives = []) => {
     for (let text of rawDirectives) {
         try {
             if (decodeURIComponent(text).trim() === '') continue;
-            let fullText, startText, contextPattern;
+            let fullText, startText, contextPattern, startPattern;
             let match = text.match(/^(?:([^,]+)-,)?([^,]+)(?:,([^,-][^,]*))?(?:,-([^,]+))?$/);
             if (match) {
                 let [_, prefix, start, end, suffix] = match;
@@ -46,8 +46,12 @@ let parseTextDirectives = (rawDirectives = []) => {
                     fullText = startText;
                 } else {
                     let pattern = regExpQuote(startText);
-                    if (end) pattern += `[^]*?${regExpQuote(decodeURIComponent(end))}`;
-                    contextPattern = (prefix ? `(${regExpQuote(decodeURIComponent(prefix))}\\s*)` : '()')
+                    let prefixPattern = prefix ? `(${regExpQuote(decodeURIComponent(prefix))}\\s*)` : '()';
+                    if (end) {
+                        startPattern = prefixPattern + pattern;
+                        pattern += `[^]*?${regExpQuote(decodeURIComponent(end))}`;
+                    }
+                    contextPattern = prefixPattern
                         + `(${pattern})`
                         + (suffix ? `(\\s*${regExpQuote(decodeURIComponent(suffix))})` : '()');
                     util.log(JSON.stringify(contextPattern));
@@ -59,6 +63,7 @@ let parseTextDirectives = (rawDirectives = []) => {
                 fullText,
                 startText,
                 contextPattern,
+                startPattern,
             });
         } catch (e) {
             console.warn(e);
@@ -292,10 +297,11 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
     util.log(textDirectiveDetails);
     const isAutoMode = settings.highlight_type === 'auto';
     let useSelection = settings.highlight_type === 'selection' || !browser.find;
-    let findRange = async (pattern, scroll = false) => {
+    let findRange = async (pattern, scroll = false, startPattern = null) => {
         if (!autoScroll) scroll = false;
+        let args = [pattern, scroll, startPattern];
         return await loadHelper(tabId, frameId,
-            `_helper.findRange(${JSON.stringify(pattern)},${scroll})`
+            `_helper.findRange(...${JSON.stringify(args)})`
         );
     };
     try {
@@ -344,7 +350,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 });
             }
             if (useSelection) {
-                if (result = await findRange(detail.contextPattern || regExpQuote(detail.fullText || startText), !r)) {
+                if (result = await findRange(detail.contextPattern || regExpQuote(detail.fullText || startText), !r, detail.startPattern)) {
                     r = true;
                 } else if (retry == 0 && startText) {
                     if (result = await findRange(`()(${regExpQuote(startText)})()`, !r)) {
