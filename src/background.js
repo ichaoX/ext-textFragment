@@ -268,8 +268,7 @@ let encodeTextDirectiveString = (text) => {
     // https://wicg.github.io/scroll-to-text-fragment/#textdirectiveexplicitchar
     let allowRegExp = new RegExp(`[a-zA-Z0-9${regExpQuote("!$'\"()*+./:;=?@_~")}]`);
     let result = '';
-    for (let i = 0; i < text.length; i++) {
-        let char = text.charAt(i);
+    for (let char of text) {
         if (!char.match(allowRegExp)) {
             let charCode = char.charCodeAt(0);
             if (charCode < 128) {
