@@ -39,7 +39,13 @@
         "message": "Auto expand incomplete words"
     },
     "label_exact_match_limit": {
-        "message": "Character limit for generating exact matching text fragment"
+        "message": "Character limit for exact matches"
+    },
+    "label_range_match_word_count": {
+        "message": "Word count for range-based matches"
+    },
+    "label_context_word_count": {
+        "message": "Word count for context"
     },
     "natively_supported": {
         "message": "natively supported"

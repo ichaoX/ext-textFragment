@@ -53,6 +53,8 @@ const util = {
         keep_url_hash: true,
         exact_match_limit: 300,
         extend_incomplete_word: true,
+        range_match_word_count: 5,
+        context_word_count: 3,
     },
     async setSettings(settings, callback) {
         if (!settings || 'object' !== typeof settings) return;

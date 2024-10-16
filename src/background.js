@@ -215,8 +215,9 @@ let buildTextDirective = async (context, innerText = null) => {
     let textDirective;
     let pattern;
     if (/[\r\n]/.test(fullText) || fullText.length >= settings.exact_match_limit) {
-        let startText = segmenter.short(fullText.replace(/[\r\n][^]*$/, ''));
-        let endText = segmenter.short(fullText.replace(/^[^]*[\n\r]/, ''), true);
+        let n = Math.max(1, settings.range_match_word_count);
+        let startText = segmenter.short(fullText.replace(/[\r\n][^]*$/, ''), false, n);
+        let endText = segmenter.short(fullText.replace(/^[^]*[\n\r]/, ''), true, n);
         if (startText.length + endText.length < fullText.length) {
             textDirective = `${encodeTextDirectiveString(startText)},${encodeTextDirectiveString(endText)}`;
             pattern = `${regExpQuote(startText)}[^]*?${regExpQuote(endText)}`;
@@ -235,10 +236,11 @@ let buildTextDirective = async (context, innerText = null) => {
             if (match && (match.length > 1 || match[0].replace(/\s+/g, ' ').toLowerCase() != fullText.replace(/\s+/g, ' ').toLowerCase())) useContext = true;
         }
         if (useContext) {
+            let n = Math.max(1, settings.context_word_count);
             let prefix = context.prefix.trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r]/, '').trim();
             let suffix = context.suffix.trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n][^]*$/, '').trim();
-            prefix = segmenter.short(prefix, true);
-            suffix = segmenter.short(suffix);
+            prefix = segmenter.short(prefix, true, n);
+            suffix = segmenter.short(suffix, false, n);
             if (suffix) textDirective += `,-${encodeTextDirectiveString(suffix)}`;
             if (prefix) textDirective = `${encodeTextDirectiveString(prefix)}-,${textDirective}`;
         }
