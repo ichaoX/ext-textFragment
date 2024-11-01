@@ -20,6 +20,11 @@
         "default_title": "__MSG_action_title__",
         "default_icon": "/icon.svg"
     },
+    "commands": {
+        "_execute_browser_action": {
+            "description": "__MSG_action_title__"
+        }
+    },
     "background": {
         "scripts": [
             "/lib/util.js",
