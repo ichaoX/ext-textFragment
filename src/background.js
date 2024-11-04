@@ -293,6 +293,20 @@ let encodeTextDirectiveString = (text) => {
     return result;
 };
 
+let webExtFind = async (text, options = {}) => {
+    let result;
+    result = await browser.find.find(text, options);
+    if (result.count == 0) {
+        // XXX
+        let compositionText = text.normalize('NFC');
+        if (compositionText != text) {
+            util.log('try NFC', compositionText);
+            result = await browser.find.find(compositionText, options);
+        }
+    }
+    return result;
+};
+
 let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll = true) => {
     let textDirectiveDetails = parseTextDirectives(textDirectives);
     if (!textDirectiveDetails.length) return false;
@@ -368,7 +382,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 fullText = fullText.trim().replace(/\n[^]*$/, '').trim();
                 await fixSubSearch(fullText);
             }
-            result = await browser.find.find(fullText, {
+            result = await webExtFind(fullText, {
                 tabId,
                 caseSensitive: false,
                 includeRangeData: true,
@@ -376,7 +390,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
             if (result.count == 0 && retry == 0 && startText) {
                 rangeIndex = 0;
                 highlightAll = true;
-                result = await browser.find.find(startText, {
+                result = await webExtFind(startText, {
                     tabId,
                     caseSensitive: false,
                     includeRangeData: true,
@@ -393,7 +407,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                     }
                     util.log(rangeIndex);
                 }
-                if (rangeIndex > result.count) {
+                if (rangeIndex >= result.count) {
                     util.log('Assertion failed: rangeIndex=', rangeIndex);
                     rangeIndex = 0;
                 }
