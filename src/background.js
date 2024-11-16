@@ -599,8 +599,10 @@ util.addListener(browser.webNavigation.onReferenceFragmentUpdated, onUpdated);
 util.addListener(browser.webNavigation.onHistoryStateUpdated, onUpdated);
 
 let action = {
-    async copyLink(tabId, frameId, url, ranges = []) {
+    async copyLink(target, url, ranges = []) {
+        let { tabId, frameId } = target || {};
         try {
+            if (!target) throw 'no target';
             let r = (await loadHelper(tabId, frameId,
                 `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
             )).filter(e => !!e.text.trim());
@@ -610,12 +612,12 @@ let action = {
         }
         util.log(ranges);
         let directives = [];
-        let innerText = textNormalize(await getInnerText(tabId, frameId));
+        let innerText = !target ? '' : textNormalize(await getInnerText(tabId, frameId));
         for (let range of ranges) {
             directives.push(`text=${await buildTextDirective(range, innerText)}`);
         }
         // XXX
-        if (url === 'about:blank' && frameId != 0) {
+        if (url === 'about:blank' && target && frameId != 0) {
             url = (await browser.tabs.executeScript(tabId, {
                 frameId,
                 matchAboutBlank: true,
@@ -712,25 +714,26 @@ if (browser.menus) {
 
     util.addListener(browser.menus.onClicked, async (info, tab) => {
         util.log(info, tab);
-        let tabId = tab.id;
+        let tabId = tab ? tab.id : null;
         let frameId = info.frameId || 0;
+        let target = tab ? { tabId, frameId } : null;
         if ([MENU_IDS.COPY_LINK, MENU_IDS.COPY_FRAME_LINK].includes(info.menuItemId)) {
             if (!info.pageUrl || !info.selectionText) return;
             let selectionText = info.selectionText.trim();
             if (!selectionText) return;
-            await action.copyLink(tabId, frameId, info.frameUrl || info.pageUrl, [{ text: selectionText }]);
+            await action.copyLink(target, info.frameUrl || info.pageUrl, [{ text: selectionText }]);
         }
-        if (info.menuItemId === MENU_IDS.REMOVE_HIGHLIGHT) {
+        if (info.menuItemId === MENU_IDS.REMOVE_HIGHLIGHT && tabId !== null) {
             await action.removeHighlight(tabId, frameId);
         }
-        if (info.menuItemId === MENU_IDS.RESTORE_HIGHLIGHT) {
+        if (info.menuItemId === MENU_IDS.RESTORE_HIGHLIGHT && tabId !== null) {
             await action.restoreHighlight(tabId, frameId);
         }
     });
 
     util.addListener(browser.menus.onShown, async (info, tab) => {
         util.log(info, tab);
-        let tabId = tab.id;
+        let tabId = tab ? tab.id : null;
         let frameId = info.frameId || 0;
         let needRefresh = false;
         let visible = false;
@@ -753,7 +756,7 @@ if (browser.menus) {
                 needRefresh = true;
             }
         }
-        if (info.contexts.includes('page')) {
+        if (info.contexts.includes('page') && tabId !== null) {
             let state = await getState(tabId, frameId);
             visible = !!state.highlighted;
             if (visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] != visible) {
@@ -813,7 +816,7 @@ if (browser.browserAction) {
                 `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
             )).filter(e => !!e.text.trim());
             if (ranges.length) {
-                await action.copyLink(tabId, frameId, url, ranges);
+                await action.copyLink({ tabId, frameId }, url, ranges);
             } else {
                 await action.restoreHighlight(tabId, frameId);
             }
