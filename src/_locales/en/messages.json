@@ -11,6 +11,9 @@
     "menu_copy_link": {
         "message": "Copy Link to Selected Text"
     },
+    "menu_copy_frame_link": {
+        "message": "Copy Frame Link to Selected Text"
+    },
     "menu_remove_highlight": {
         "message": "Remove Highlight"
     },

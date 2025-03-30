@@ -599,8 +599,10 @@ util.addListener(browser.webNavigation.onReferenceFragmentUpdated, onUpdated);
 util.addListener(browser.webNavigation.onHistoryStateUpdated, onUpdated);
 
 let action = {
-    async copyLink(tabId, frameId, url, ranges = []) {
+    async copyLink(target, url, ranges = []) {
+        let { tabId, frameId } = target || {};
         try {
+            if (!target) throw 'no target';
             let r = (await loadHelper(tabId, frameId,
                 `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
             )).filter(e => !!e.text.trim());
@@ -610,12 +612,12 @@ let action = {
         }
         util.log(ranges);
         let directives = [];
-        let innerText = textNormalize(await getInnerText(tabId, frameId));
+        let innerText = !target ? '' : textNormalize(await getInnerText(tabId, frameId));
         for (let range of ranges) {
             directives.push(`text=${await buildTextDirective(range, innerText)}`);
         }
         // XXX
-        if (url === 'about:blank' && frameId != 0) {
+        if (url === 'about:blank' && target && frameId != 0) {
             url = (await browser.tabs.executeScript(tabId, {
                 frameId,
                 matchAboutBlank: true,
@@ -666,11 +668,14 @@ if (browser.menus) {
 
     const MENU_IDS = {
         COPY_LINK: 'copy-link',
+        COPY_FRAME_LINK: 'copy-frame-link',
         REMOVE_HIGHLIGHT: 'remove-highlight',
         RESTORE_HIGHLIGHT: 'restore-highlight',
     };
 
     let visibleMenu = {
+        [MENU_IDS.COPY_LINK]: true,
+        [MENU_IDS.COPY_FRAME_LINK]: false,
         [MENU_IDS.REMOVE_HIGHLIGHT]: false,
         [MENU_IDS.RESTORE_HIGHLIGHT]: false,
     };
@@ -679,9 +684,17 @@ if (browser.menus) {
         id: MENU_IDS.COPY_LINK,
         title: browser.i18n.getMessage("menu_copy_link"),
         contexts: ["selection"],
+        // visible: visibleMenu[MENU_IDS.COPY_LINK],
     });
 
     try {
+        browser.menus.create({
+            id: MENU_IDS.COPY_FRAME_LINK,
+            title: browser.i18n.getMessage("menu_copy_frame_link"),
+            contexts: ["selection"],
+            visible: visibleMenu[MENU_IDS.COPY_FRAME_LINK],
+        });
+
         browser.menus.create({
             id: MENU_IDS.REMOVE_HIGHLIGHT,
             title: browser.i18n.getMessage("menu_remove_highlight"),
@@ -701,45 +714,66 @@ if (browser.menus) {
 
     util.addListener(browser.menus.onClicked, async (info, tab) => {
         util.log(info, tab);
-        let tabId = tab.id;
+        let tabId = tab ? tab.id : null;
         let frameId = info.frameId || 0;
-        if (info.menuItemId === MENU_IDS.COPY_LINK) {
+        let target = tab ? { tabId, frameId } : null;
+        if ([MENU_IDS.COPY_LINK, MENU_IDS.COPY_FRAME_LINK].includes(info.menuItemId)) {
             if (!info.pageUrl || !info.selectionText) return;
             let selectionText = info.selectionText.trim();
             if (!selectionText) return;
-            await action.copyLink(tabId, frameId, info.frameUrl || info.pageUrl, [{ text: selectionText }]);
+            await action.copyLink(target, info.frameUrl || info.pageUrl, [{ text: selectionText }]);
         }
-        if (info.menuItemId === MENU_IDS.REMOVE_HIGHLIGHT) {
+        if (info.menuItemId === MENU_IDS.REMOVE_HIGHLIGHT && tabId !== null) {
             await action.removeHighlight(tabId, frameId);
         }
-        if (info.menuItemId === MENU_IDS.RESTORE_HIGHLIGHT) {
+        if (info.menuItemId === MENU_IDS.RESTORE_HIGHLIGHT && tabId !== null) {
             await action.restoreHighlight(tabId, frameId);
         }
     });
 
     util.addListener(browser.menus.onShown, async (info, tab) => {
         util.log(info, tab);
-        if (!info.contexts.includes('page')) return;
-        let tabId = tab.id;
+        let tabId = tab ? tab.id : null;
         let frameId = info.frameId || 0;
         let needRefresh = false;
         let visible = false;
-        let state = await getState(tabId, frameId);
-        visible = !!state.highlighted;
-        if (visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] != visible) {
-            visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] = visible;
-            await browser.menus.update(MENU_IDS.REMOVE_HIGHLIGHT, {
-                visible,
-            });
-            needRefresh = true;
+        if (info.contexts.includes('selection')) {
+            let isFrame = info.contexts.includes('frame');
+            visible = !isFrame;
+            if (visibleMenu[MENU_IDS.COPY_LINK] != visible) {
+                visibleMenu[MENU_IDS.COPY_LINK] = visible;
+                await browser.menus.update(MENU_IDS.COPY_LINK, {
+                    visible,
+                });
+                needRefresh = true;
+            }
+            visible = isFrame;
+            if (visibleMenu[MENU_IDS.COPY_FRAME_LINK] != visible) {
+                visibleMenu[MENU_IDS.COPY_FRAME_LINK] = visible;
+                await browser.menus.update(MENU_IDS.COPY_FRAME_LINK, {
+                    visible,
+                });
+                needRefresh = true;
+            }
         }
-        visible = !state.highlighted && !!state.textDirectives;
-        if (visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT] != visible) {
-            visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT] = visible;
-            await browser.menus.update(MENU_IDS.RESTORE_HIGHLIGHT, {
-                visible,
-            });
-            needRefresh = true;
+        if (info.contexts.includes('page') && tabId !== null) {
+            let state = await getState(tabId, frameId);
+            visible = !!state.highlighted;
+            if (visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] != visible) {
+                visibleMenu[MENU_IDS.REMOVE_HIGHLIGHT] = visible;
+                await browser.menus.update(MENU_IDS.REMOVE_HIGHLIGHT, {
+                    visible,
+                });
+                needRefresh = true;
+            }
+            visible = !state.highlighted && !!state.textDirectives;
+            if (visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT] != visible) {
+                visibleMenu[MENU_IDS.RESTORE_HIGHLIGHT] = visible;
+                await browser.menus.update(MENU_IDS.RESTORE_HIGHLIGHT, {
+                    visible,
+                });
+                needRefresh = true;
+            }
         }
         if (needRefresh) browser.menus.refresh();
     });
@@ -782,7 +816,7 @@ if (browser.browserAction) {
                 `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
             )).filter(e => !!e.text.trim());
             if (ranges.length) {
-                await action.copyLink(tabId, frameId, url, ranges);
+                await action.copyLink({ tabId, frameId }, url, ranges);
             } else {
                 await action.restoreHighlight(tabId, frameId);
             }
