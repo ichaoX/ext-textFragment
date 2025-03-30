@@ -1,0 +1,65 @@
+{
+    "ext_name": {
+        "message": "Fragment de texte"
+    },
+    "ext_description": {
+        "message": "Défilement automatique jusqu'au fragment de texte (#:~:text) et vous permet de créer un hyperlien pour le texte sélectionné."
+    },
+    "action_title": {
+        "message": "Copier l'hyperlien pour le texte sélectionné / restaurer le surlignage"
+    },
+    "menu_copy_link": {
+        "message": "Copier l'hyperlien pour le texte sélectionné"
+    },
+    "menu_remove_highlight": {
+        "message": "Effacer le surlignage"
+    },
+    "menu_restore_highlight": {
+        "message": "Restaurer le surlignage"
+    },
+    "label_find": {
+        "message": "Défiler jusqu'au fragment de texte"
+    },
+    "label_copy_link": {
+        "message": "Créer un hyperlien pour le texte sélectionné"
+    },
+    "label_auto_disable": {
+        "message": "Désactive cette fonctionnalité de l'extension lorsqu'elle est nativement prise en charge"
+    },
+    "label_remove_fragment_directive": {
+        "message": "Efface automatiquement la directive du fragment"
+    },
+    "label_highlight_type": {
+        "message": "Méthode de surlignage"
+    },
+    "label_keep_url_hash": {
+        "message": "Conserver l'identifieur du fragment dans l'URL"
+    },
+    "label_extend_incomplete_word": {
+        "message": "Développer automatiquement les mots incomplets"
+    },
+    "label_exact_match_limit": {
+        "message": "Limite de caractères pour les correspondances exactes"
+    },
+    "label_range_match_word_count": {
+        "message": "Nombre de mots pour les correspondances par plages"
+    },
+    "label_context_word_count": {
+        "message": "Nombre de mots pour le contexte"
+    },
+    "natively_supported": {
+        "message": "nativement pris en charge"
+    },
+    "tips_natively_supported": {
+        "message": "Cette option peut ne plus être effective, car ce navigateur prend en charge nativement cette fonctionnalité."
+    },
+    "options": {
+        "message": "Paramètres"
+    },
+    "save": {
+        "message": "Enregistrer"
+    },
+    "auto": {
+        "message": "Auto"
+    }
+}
