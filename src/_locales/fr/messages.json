@@ -3,7 +3,7 @@
         "message": "Fragment de texte"
     },
     "ext_description": {
-        "message": "Défilement automatique jusqu'au fragment de texte (#:~:texte) et vous permet de créer un hyperlien pour le texte sélectionné."
+        "message": "Défilement automatique jusqu'au fragment de texte (#:~:text) et vous permet de créer un hyperlien pour le texte sélectionné."
     },
     "action_title": {
         "message": "Copier l'hyperlien pour le texte sélectionné / restaurer le surlignage"
@@ -51,13 +51,13 @@
         "message": "nativement pris en charge"
     },
     "tips_natively_supported": {
-        "message": "Cette option peut ne plus être effective car ce navigateur prend en charge nativement cette fonctionnalité."
+        "message": "Cette option peut ne plus être effective, car ce navigateur prend en charge nativement cette fonctionnalité."
     },
     "options": {
         "message": "Paramètres"
     },
     "save": {
-        "message": "Ennregistrer"
+        "message": "Enregistrer"
     },
     "auto": {
         "message": "Auto"
