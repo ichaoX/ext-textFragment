@@ -214,10 +214,10 @@ let buildTextDirective = async (context, innerText = null) => {
     let fullText = context.text;
     let textDirective;
     let pattern;
-    if (/[\r\n]/.test(fullText) || fullText.length >= settings.exact_match_limit) {
+    if (/[\r\n\t]/.test(fullText) || fullText.length >= settings.exact_match_limit) {
         let n = Math.max(1, settings.range_match_word_count);
-        let startText = segmenter.short(fullText.replace(/[\r\n][^]*$/, ''), false, n);
-        let endText = segmenter.short(fullText.replace(/^[^]*[\n\r]/, ''), true, n);
+        let startText = segmenter.short(fullText.replace(/[\r\n\t][^]*$/, ''), false, n);
+        let endText = segmenter.short(fullText.replace(/^[^]*[\n\r\t]/, ''), true, n);
         if (startText.length + endText.length < fullText.length) {
             textDirective = `${encodeTextDirectiveString(startText)},${encodeTextDirectiveString(endText)}`;
             pattern = `${regExpQuote(startText)}[^]*?${regExpQuote(endText)}`;
@@ -237,8 +237,8 @@ let buildTextDirective = async (context, innerText = null) => {
         }
         if (useContext) {
             let n = Math.max(1, settings.context_word_count);
-            let prefix = context.prefix.trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r]/, '').trim();
-            let suffix = context.suffix.trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n][^]*$/, '').trim();
+            let prefix = context.prefix.trim().replace(/\r?\n\r?/g, "\n").replace(/^[^]*[\n\r\t]/, '').trim();
+            let suffix = context.suffix.trim().replace(/\r?\n\r?/g, "\n").replace(/[\r\n\t][^]*$/, '').trim();
             prefix = segmenter.short(prefix, true, n);
             suffix = segmenter.short(suffix, false, n);
             if (suffix) textDirective += `,-${encodeTextDirectiveString(suffix)}`;
@@ -357,7 +357,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 if (!useSelection && !await fixSubSearch() && retry > 0) continue;
             }
             fullText = fullText || startText;
-            if (useSelection || fullText.includes("\n") || r) {
+            if (useSelection || /[\n\t]/.test(fullText) || r) {
                 if (isAutoMode && !useSelection) useSelection = true;
                 browser.tabs.executeScript(tabId, {
                     frameId,
@@ -377,9 +377,9 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 continue;
             }
             if (r) continue;
-            if (fullText.includes("\n")) {
+            if (/[\n\t]/.test(fullText)) {
                 if (!contextRegExp) contextRegExp = new RegExp(regExpQuote(fullText), 'ig');
-                fullText = fullText.trim().replace(/\n[^]*$/, '').trim();
+                fullText = fullText.trim().replace(/[\n\t][^]*$/, '').trim();
                 await fixSubSearch(fullText);
             }
             result = await webExtFind(fullText, {
