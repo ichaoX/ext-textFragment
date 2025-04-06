@@ -127,7 +127,7 @@ var _helper = {
                 case Node.TEXT_NODE: {
                     let c = (i, update = false) => {
                         s.extend(node, i);
-                        if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = s.toString()).trim() || !test(text, search)) {
+                        if (endRange.compareBoundaryPoints(Range.END_TO_END, s.getRangeAt(0)) < 0 || !(text = this.textNormalize(s.toString())).trim() || !test(text, search)) {
                             if (update) mismatch = true;
                             return true;
                         }
@@ -139,11 +139,11 @@ var _helper = {
                     if (mismatch) {
                         // XXX
                         let hasWhiteSpace = false;
-                        if (trim && 'string' === typeof search && s.toString().trim() === search.trim()) hasWhiteSpace = true;
+                        if (trim && 'string' === typeof search && this.textNormalize(s.toString()).trim() === search.trim()) hasWhiteSpace = true;
                         i--;
                         if (i < 0) return false;
                         s.extend(node, i);
-                        if (hasWhiteSpace && s.toString().trim() !== search.trim()) {
+                        if (hasWhiteSpace && this.textNormalize(s.toString()).trim() !== search.trim()) {
                             i++;
                             s.extend(node, i);
                         }
