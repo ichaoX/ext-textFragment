@@ -37,7 +37,7 @@ let parseTextDirectives = (rawDirectives = []) => {
     for (let text of rawDirectives) {
         try {
             if (decodeURIComponent(text).trim() === '') continue;
-            let fullText, startText, contextPattern, startPattern;
+            let fullText, startText, contextPattern, startPattern, hasContext = false;
             let match = text.match(/^(?:([^,]+)-,)?([^,]+)(?:,([^,-][^,]*))?(?:,-([^,]+))?$/);
             if (match) {
                 let [_, prefix, start, end, suffix] = match;
@@ -54,6 +54,7 @@ let parseTextDirectives = (rawDirectives = []) => {
                     contextPattern = prefixPattern
                         + `(${pattern})`
                         + (suffix ? `(\\s*${regExpQuote(decodeURIComponent(suffix))})` : '()');
+                    hasContext = prefix || suffix;
                     util.log(JSON.stringify(contextPattern));
                 }
             } else {
@@ -64,6 +65,7 @@ let parseTextDirectives = (rawDirectives = []) => {
                 startText,
                 contextPattern,
                 startPattern,
+                hasContext,
             });
         } catch (e) {
             console.warn(e);
@@ -357,7 +359,7 @@ let findText = async (textDirectives, tabId, frameId = 0, retry = 0, autoScroll 
                 if (!useSelection && !await fixSubSearch() && retry > 0) continue;
             }
             fullText = fullText || startText;
-            if (useSelection || /[\n\t]/.test(fullText) || r) {
+            if (useSelection || /[\n\t]/.test(fullText) || detail.hasContext || r) {
                 if (isAutoMode && !useSelection) useSelection = true;
                 browser.tabs.executeScript(tabId, {
                     frameId,
