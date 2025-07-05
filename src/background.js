@@ -533,6 +533,15 @@ let removeFragmentDirectives = async (tabId, frameId) => {
 };
 
 let copyToClipboard = async (text, html) => {
+    if (navigator.clipboard && text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return;
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+
     function oncopy(event) {
         document.removeEventListener("copy", oncopy, true);
         // Hide the event from the page to prevent tampering.
@@ -542,6 +551,7 @@ let copyToClipboard = async (text, html) => {
         if (text !== undefined) event.clipboardData.setData("text/plain", text);
         if (html !== undefined) event.clipboardData.setData("text/html", html);
     }
+    // XXX: dom.event.clipboardevents.enabled = true
     document.addEventListener("copy", oncopy, true);
     try {
         // Requires the clipboardWrite permission, or a user gesture:
