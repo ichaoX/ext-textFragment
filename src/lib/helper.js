@@ -188,7 +188,7 @@ var _helper = {
             console.assert(this.textNormalize(s.toString()) === this.textNormalize(text), `text ${JSON.stringify(text)} ${JSON.stringify(s.toString())}`);
             return true;
         };
-        document.documentElement.classList.add('ext-text-fragment--selectable');
+        this.makeSelectable();
         try {
             s.removeAllRanges();
             r.selectNode(container);
@@ -321,7 +321,7 @@ var _helper = {
                 }
             }
             // XXX
-            document.documentElement.classList.add('ext-text-fragment--selectable');
+            this.makeSelectable();
             for (let i of t) {
                 let ranges = i.ranges;
                 delete i.ranges;
@@ -428,6 +428,11 @@ var _helper = {
             }
         }
         return t;
+    },
+    makeSelectable() {
+        if (!/\/x?html\b/i.test(document.contentType)) return false;
+        document.documentElement.classList.add('ext-text-fragment--selectable');
+        return true;
     },
 };
 
