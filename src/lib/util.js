@@ -55,6 +55,7 @@ const util = {
         extend_incomplete_word: true,
         range_match_word_count: 5,
         context_word_count: 3,
+        encoding_chars: '()\'";.?!',
     },
     async setSettings(settings, callback) {
         if (!settings || 'object' !== typeof settings) return;

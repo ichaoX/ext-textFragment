@@ -50,6 +50,9 @@
     "label_context_word_count": {
         "message": "Word count for context"
     },
+    "label_extra_encoding_chars": {
+        "message": "Additional characters percent-encoded"
+    },
     "natively_supported": {
         "message": "natively supported"
     },

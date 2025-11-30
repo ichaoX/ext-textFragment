@@ -278,7 +278,7 @@ let encodeTextDirectiveString = (text) => {
     let allowRegExp = new RegExp(`[a-zA-Z0-9${regExpQuote("!$'\"()*+./:;=?@_~")}]`);
     let result = '';
     for (let char of text) {
-        if (!char.match(allowRegExp)) {
+        if (!char.match(allowRegExp) || (settings.encoding_chars || '').includes(char)) {
             let charCode = char.charCodeAt(0);
             if (charCode < 128) {
                 let hexChar = charCode.toString(16);
