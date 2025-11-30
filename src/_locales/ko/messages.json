@@ -8,6 +8,9 @@
     "menu_copy_link": {
         "message": "선택된 텍스트에 대한 링크 복사"
     },
+    "menu_copy_frame_link": {
+        "message": "선택한 텍스트의 프레임 링크 복사"
+    },
     "menu_remove_highlight": {
         "message": "하이라이트 제거"
     },
@@ -43,6 +46,9 @@
     },
     "label_context_word_count": {
         "message": "맥락의 단어 수"
+    },
+    "label_extra_encoding_chars": {
+        "message": "추가적으로 퍼센트 인코딩된 문자"
     },
     "natively_supported": {
         "message": "기본적으로 지원됨"

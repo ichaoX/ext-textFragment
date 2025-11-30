@@ -8,6 +8,9 @@
     "menu_copy_link": {
         "message": "Copiar Link para o Texto Selecionado"
     },
+    "menu_copy_frame_link": {
+        "message": "Copiar link do frame para o texto selecionado"
+    },
     "menu_remove_highlight": {
         "message": "Remover Destaque"
     },
@@ -43,6 +46,9 @@
     },
     "label_context_word_count": {
         "message": "Contagem de palavras para contexto"
+    },
+    "label_extra_encoding_chars": {
+        "message": "Caracteres adicionais codificados em porcentagem"
     },
     "natively_supported": {
         "message": "suportado nativamente"

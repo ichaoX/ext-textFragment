@@ -8,6 +8,9 @@
     "menu_copy_link": {
         "message": "Seçili Metin İçin Bağlantıyı Kopyala"
     },
+    "menu_copy_frame_link": {
+        "message": "Seçilen Metnin Çerçeve Bağlantısını Kopyala"
+    },
     "menu_remove_highlight": {
         "message": "Vurgulamayı Kaldır"
     },
@@ -43,6 +46,9 @@
     },
     "label_context_word_count": {
         "message": "Bağlam için kelime sayısı"
+    },
+    "label_extra_encoding_chars": {
+        "message": "Ek karakterler yüzde olarak kodlandı"
     },
     "natively_supported": {
         "message": "yerel olarak desteklenen"

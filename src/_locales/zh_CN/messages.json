@@ -8,6 +8,9 @@
     "menu_copy_link": {
         "message": "复制选定文本的链接"
     },
+    "menu_copy_frame_link": {
+        "message": "复制所选文本的框架链接"
+    },
     "menu_remove_highlight": {
         "message": "移除高亮"
     },
@@ -43,6 +46,9 @@
     },
     "label_context_word_count": {
         "message": "上下文的词数"
+    },
+    "label_extra_encoding_chars": {
+        "message": "额外的百分比编码字符"
     },
     "natively_supported": {
         "message": "原生支持"

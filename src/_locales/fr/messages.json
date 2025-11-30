@@ -11,6 +11,9 @@
     "menu_copy_link": {
         "message": "Copier l'hyperlien pour le texte sélectionné"
     },
+    "menu_copy_frame_link": {
+        "message": "Copier le lien du cadre au texte sélectionné"
+    },
     "menu_remove_highlight": {
         "message": "Effacer le surlignage"
     },
@@ -46,6 +49,9 @@
     },
     "label_context_word_count": {
         "message": "Nombre de mots pour le contexte"
+    },
+    "label_extra_encoding_chars": {
+        "message": "Caractères supplémentaires codés en pourcentage"
     },
     "natively_supported": {
         "message": "nativement pris en charge"
