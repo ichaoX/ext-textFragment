@@ -616,7 +616,7 @@ let action = {
         try {
             if (!target) throw 'no target';
             let r = (await loadHelper(tabId, frameId,
-                `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
+                `_helper.getSelectionText(${JSON.stringify(settings)})`
             )).filter(e => !!e.text.trim());
             if (r.length > 0) ranges = r;
         } catch (e) {
@@ -637,7 +637,12 @@ let action = {
             }))[0];
         }
         let urlObj = new URL(url);
+        urlObj.hash = urlObj.hash.replace(/:~:.*$/, '');
         if (!settings.keep_url_hash) urlObj.hash = "";
+        if (settings.fallback_hash
+            && urlObj.hash.length < 2
+            && ranges[0] && !!ranges[0].hash
+        ) urlObj.hash = ranges[0].hash;
         urlObj.hash = urlObj.hash.replace(/(:~:.*$)|$/, ':~:' + directives.join('&'));
         let href = urlObj.href;
         util.log(href);
@@ -825,7 +830,7 @@ if (browser.browserAction) {
                 if (frame.url) url = frame.url;
             }
             let ranges = (await loadHelper(tabId, frameId,
-                `_helper.getSelectionText(${JSON.stringify(settings.extend_incomplete_word)})`
+                `_helper.getSelectionText(${JSON.stringify(settings)})`
             )).filter(e => !!e.text.trim());
             if (ranges.length) {
                 await action.copyLink({ tabId, frameId }, url, ranges);

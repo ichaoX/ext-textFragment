@@ -51,6 +51,7 @@ const util = {
         highlight_type: 'auto',
         remove_fragment_directive: false,
         keep_url_hash: true,
+        fallback_hash: true,
         exact_match_limit: 300,
         extend_incomplete_word: true,
         range_match_word_count: 5,

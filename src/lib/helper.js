@@ -35,6 +35,73 @@ var _helper = {
         }
         return r;
     },
+    /**
+     * @param {Node} startNode
+     * @returns {string|null}
+     */
+    findFragmentId(startNode) {
+        const root = document.body || document.documentElement;
+        let node = startNode;
+        let rel = 'self';
+        if (!root.contains(node)) return null;
+
+        let hl = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+        /**
+         * @param {Element} e
+         */
+        const findHeadingMatch = (e, deep = true) => {
+            if (hl.length === 0) return null;
+            let i = hl.indexOf(e.tagName);
+            if (i > -1) {
+                // hl = hl.slice(0, i);
+                hl.splice(i);
+                if (!e.id) e = e.querySelector('[id]');
+                if (e && e.id) return e;
+                return null;
+            }
+            if (!deep) return null;
+            let l = e.querySelectorAll(hl.join(','));
+            for (let i = l.length - 1; i >= 0; i--) {
+                if ((e = findHeadingMatch(l[i], false))) return e;
+            }
+            return null;
+        };
+
+        const findMatch = () => {
+            if (!(node instanceof Element)) return null;
+            if (rel == 'previous') return findHeadingMatch(node);
+            return node.id ? node : null;
+        };
+
+        const walker = document.createTreeWalker(
+            root,
+            NodeFilter.SHOW_ELEMENT
+        );
+        walker.currentNode = startNode;
+
+        while (node) {
+            this.log(node);
+            if ((node = findMatch())) break;
+            node = walker.previousSibling();
+            if (node) {
+                rel = 'previous';
+            } else {
+                node = walker.parentNode();
+                rel = 'parent';
+            }
+        }
+        this.log(node);
+        // XXX
+        if (node && node instanceof Element
+            && (node.checkVisibility ? node.checkVisibility() : node.offsetParent != null)
+            && node.id
+            && document.querySelectorAll(`#${CSS.escape(node.id)}`).length === 1
+            && node.getBoundingClientRect().top + window.scrollY > 200
+        ) {
+            return node.id;
+        }
+        return null;
+    },
     findRange(pattern, scroll = false, startPattern = null) {
         let regexp = new RegExp(pattern, 'i');
         let regexp0 = startPattern ? new RegExp(startPattern, 'i') : null;
@@ -269,14 +336,17 @@ var _helper = {
             }
         }
     },
-    getSelectionText(extend) {
+    getSelectionText(options = {}) {
+        let extend = !!options.extend_incomplete_word;
         let s = getSelection();
         let t = [];
+        let startNode = null;
         if (s.isCollapsed && document.activeElement && 'function' === typeof document.activeElement.setSelectionRange) {
             // XXX mutli range
             try {
                 let e = document.activeElement;
                 if (e.selectionStart < e.selectionEnd) {
+                    startNode = e;
                     t.push({
                         text: e.value.slice(e.selectionStart, e.selectionEnd),
                         prefix: e.value.slice(0, e.selectionStart),
@@ -287,6 +357,7 @@ var _helper = {
                 console.warn(e);
             }
         } else {
+            startNode = s.anchorNode;
             let rl = [];
             for (let i = 0; i < s.rangeCount; i++) {
                 rl.push(s.getRangeAt(i).cloneRange());
@@ -426,6 +497,9 @@ var _helper = {
             for (let i of rl) {
                 s.addRange(i);
             }
+        }
+        if (options.fallback_hash && startNode && t[0]) {
+            t[0].hash = this.findFragmentId(startNode);
         }
         return t;
     },
