@@ -532,6 +532,13 @@ let removeFragmentDirectives = async (tabId, frameId) => {
     }
 };
 
+let isHashRouting = (hash) => {
+    hash = (hash || '').replace(/^#/, '').replace(/:~:.*$/, '');
+    if (!hash) return false;
+    // XXX
+    return '/!?'.includes(hash[0]) || /[\/=]/.test(hash);
+};
+
 let copyToClipboard = async (text, html) => {
     if (navigator.clipboard && text) {
         try {
@@ -638,7 +645,9 @@ let action = {
         }
         let urlObj = new URL(url);
         urlObj.hash = urlObj.hash.replace(/:~:.*$/, '');
-        if (!settings.keep_url_hash) urlObj.hash = "";
+        if (!settings.keep_url_hash
+            && !isHashRouting(urlObj.hash)
+        ) urlObj.hash = "";
         if (settings.fallback_hash
             && urlObj.hash.length < 2
             && ranges[0] && !!ranges[0].hash
