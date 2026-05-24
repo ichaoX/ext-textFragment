@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "Simpan pengenal fragmen di URL"
     },
+    "label_fallback_hash": {
+        "message": "Tambahkan fragmen ID elemen cadangan"
+    },
     "label_extend_incomplete_word": {
         "message": "Perluas kata yang tidak lengkap secara otomatis"
     },

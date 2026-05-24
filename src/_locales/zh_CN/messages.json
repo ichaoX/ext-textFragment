@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "在 URL 中保留片段标识符"
     },
+    "label_fallback_hash": {
+        "message": "添加后备元素ID片段"
+    },
     "label_extend_incomplete_word": {
         "message": "自动扩展不完整的词"
     },

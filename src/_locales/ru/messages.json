@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "Сохранить идентификатор фрагмента в URL"
     },
+    "label_fallback_hash": {
+        "message": "Добавить резервный фрагмент ID элемента"
+    },
     "label_extend_incomplete_word": {
         "message": "Автоматическое расширение неполных слов"
     },

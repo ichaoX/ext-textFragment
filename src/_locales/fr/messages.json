@@ -36,7 +36,10 @@
         "message": "Méthode de surlignage"
     },
     "label_keep_url_hash": {
-        "message": "Conserver l'identifieur du fragment dans l'URL"
+        "message": "Conserver l'identifiant du fragment dans l'URL"
+    },
+    "label_fallback_hash": {
+        "message": "Ajouter un fragment d'identifiant d'élément de secours"
     },
     "label_extend_incomplete_word": {
         "message": "Développer automatiquement les mots incomplets"

@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "Manter identificador de fragmento na URL"
     },
+    "label_fallback_hash": {
+        "message": "Adicionar fragmento de ID de elemento de fallback"
+    },
     "label_extend_incomplete_word": {
         "message": "Expandir automaticamente palavras incompletas"
     },

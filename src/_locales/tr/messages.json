@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "URL'de parça tanımlayıcısını koru"
     },
+    "label_fallback_hash": {
+        "message": "Yedek öğe kimliği parçası ekle"
+    },
     "label_extend_incomplete_word": {
         "message": "Tamamlanmamış kelimeleri otomatik olarak genişlet"
     },
@@ -48,7 +51,7 @@
         "message": "Bağlam için kelime sayısı"
     },
     "label_extra_encoding_chars": {
-        "message": "Ek karakterler yüzde olarak kodlandı"
+        "message": "Yüzde olarak kodlanacak ek karakterler"
     },
     "natively_supported": {
         "message": "yerel olarak desteklenen"

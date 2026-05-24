@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "URLにフラグメント識別子を保持"
     },
+    "label_fallback_hash": {
+        "message": "フォールバック要素IDフラグメントを追加"
+    },
     "label_extend_incomplete_word": {
         "message": "不完全な単語を自動的に拡張"
     },

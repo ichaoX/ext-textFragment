@@ -35,6 +35,9 @@
     "label_keep_url_hash": {
         "message": "URL에서 조각 식별자 유지"
     },
+    "label_fallback_hash": {
+        "message": "폴백 요소 ID 프래그먼트 추가"
+    },
     "label_extend_incomplete_word": {
         "message": "불완전한 단어 자동 확장"
     },
